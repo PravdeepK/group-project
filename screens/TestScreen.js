@@ -31,7 +31,7 @@ const TestScreen = ({ navigation }) => {
                 setQuizFinished(true);
                 updateScoreboard(score + (answer === correctAnswer ? 1 : 0) === questions.length);
             }
-        }, 2000); // Delay to allow users to see correct answer
+        }, 2000);
     };
 
     const restartQuiz = () => {
