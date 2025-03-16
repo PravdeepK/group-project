@@ -17,7 +17,9 @@ const TestScreen = ({ navigation }) => {
 
     const handleAnswerSelect = (answer) => {
         setSelectedAnswer(answer);
-        if (answer === questions[currentQuestionIndex].answer) {
+        const correctAnswer = questions[currentQuestionIndex].answer;
+
+        if (answer === correctAnswer) {
             setScore(score + 1);
         }
 
@@ -27,9 +29,9 @@ const TestScreen = ({ navigation }) => {
                 setSelectedAnswer(null);
             } else {
                 setQuizFinished(true);
-                updateScoreboard(score + 1 === questions.length);
+                updateScoreboard(score + (answer === correctAnswer ? 1 : 0) === questions.length);
             }
-        }, 1000);
+        }, 2000); // Delay to allow users to see correct answer
     };
 
     const restartQuiz = () => {
@@ -46,23 +48,29 @@ const TestScreen = ({ navigation }) => {
                     <Text style={styles.title}>G1 Test</Text>
                     <Text style={styles.question}>{questions[currentQuestionIndex]?.question}</Text>
                     
-                    {questions[currentQuestionIndex]?.options.map((option, index) => (
-                        <TouchableOpacity
-                            key={index}
-                            style={[
-                                styles.optionButton,
-                                selectedAnswer === option
-                                    ? option === questions[currentQuestionIndex].answer
+                    {questions[currentQuestionIndex]?.options.map((option, index) => {
+                        const isCorrect = option === questions[currentQuestionIndex].answer;
+                        const isSelected = option === selectedAnswer;
+                        return (
+                            <TouchableOpacity
+                                key={index}
+                                style={[
+                                    styles.optionButton,
+                                    isSelected
+                                        ? isCorrect
+                                            ? styles.correctAnswer
+                                            : styles.wrongAnswer
+                                        : selectedAnswer && isCorrect
                                         ? styles.correctAnswer
-                                        : styles.wrongAnswer
-                                    : null
-                            ]}
-                            onPress={() => handleAnswerSelect(option)}
-                            disabled={selectedAnswer !== null}
-                        >
-                            <Text style={styles.optionText}>{option}</Text>
-                        </TouchableOpacity>
-                    ))}
+                                        : null
+                                ]}
+                                onPress={() => handleAnswerSelect(option)}
+                                disabled={selectedAnswer !== null}
+                            >
+                                <Text style={styles.optionText}>{option}</Text>
+                            </TouchableOpacity>
+                        );
+                    })}
                 </>
             ) : (
                 <View style={styles.resultContainer}>
@@ -82,8 +90,8 @@ const styles = StyleSheet.create({
     question: { fontSize: 18, textAlign: 'center', marginBottom: 20 },
     optionButton: { width: '80%', padding: 15, marginVertical: 5, backgroundColor: '#ddd', borderRadius: 10 },
     optionText: { fontSize: 16, textAlign: 'center' },
-    correctAnswer: { backgroundColor: '#4CAF50' },
-    wrongAnswer: { backgroundColor: '#F44336' },
+    correctAnswer: { backgroundColor: '#4CAF50' }, // Green for correct answer
+    wrongAnswer: { backgroundColor: '#F44336' }, // Red for wrong answer
     resultContainer: { alignItems: 'center' },
     resultText: { fontSize: 24, fontWeight: 'bold', marginBottom: 10 },
     scoreText: { fontSize: 20, marginBottom: 20 }
