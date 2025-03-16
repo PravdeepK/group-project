@@ -1,45 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, ActivityIndicator, StyleSheet } from 'react-native';
-import { fetchQuestions } from './services/api';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import HomeScreen from './screens/HomeScreen';
+import ScoreboardScreen from './screens/ScoreboardScreen';
+import TestScreen from './screens/TestScreen';
+
+const Stack = createStackNavigator();
 
 const App = () => {
-    const [questions, setQuestions] = useState([]);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        const getQuestions = async () => {
-            const data = await fetchQuestions();
-            setQuestions(data);
-            setLoading(false);
-        };
-        getQuestions();
-    }, []);
-
     return (
-        <View style={styles.container}>
-            <Text style={styles.header}>G1 Practice Test</Text>
-            {loading ? (
-                <ActivityIndicator size="large" color="#0000ff" />
-            ) : (
-                <FlatList
-                    data={questions}
-                    keyExtractor={(item) => item.id.toString()}
-                    renderItem={({ item }) => (
-                        <View style={styles.questionContainer}>
-                            <Text style={styles.questionText}>{item.question}</Text>
-                        </View>
-                    )}
-                />
-            )}
-        </View>
+        <NavigationContainer>
+            <Stack.Navigator>
+                <Stack.Screen name="Home" component={HomeScreen} />
+                <Stack.Screen name="Scoreboard" component={ScoreboardScreen} />
+                <Stack.Screen name="Test" component={TestScreen} />
+            </Stack.Navigator>
+        </NavigationContainer>
     );
 };
-
-const styles = StyleSheet.create({
-    container: { flex: 1, padding: 20, backgroundColor: '#f8f8f8' },
-    header: { fontSize: 24, fontWeight: 'bold', marginBottom: 10 },
-    questionContainer: { padding: 15, backgroundColor: '#fff', marginVertical: 5, borderRadius: 5 },
-    questionText: { fontSize: 18 }
-});
 
 export default App;
