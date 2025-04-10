@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, Button, TouchableOpacity, StyleSheet } from 'react-native';
 import { getScoreboard, resetScoreboard } from '../utils/scoreboardStorage';
 
 const ScoreboardScreen = ({ navigation }) => {
@@ -18,22 +18,91 @@ const ScoreboardScreen = ({ navigation }) => {
         setScoreboard({ attempts: 0, wins: 0 });
     };
 
+  
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Scoreboard</Text>
-            <Text style={styles.text}>Total Attempts: {scoreboard.attempts}</Text>
-            <Text style={styles.text}>Wins: {scoreboard.wins}</Text>
-            <Text style={styles.text}>Win Rate: {scoreboard.attempts > 0 ? ((scoreboard.wins / scoreboard.attempts) * 100).toFixed(2) + '%' : '0%'}</Text>
-            <Button title="Reset Scoreboard" onPress={handleReset} />
-            <Button title="Back to Home" onPress={() => navigation.goBack()} />
+          <Text style={styles.title}>Your Statistics</Text>
+          
+          <View style={styles.statsBox}>
+            <View style={styles.statRow}>
+              <Text style={styles.statLabel}>Attempts:</Text>
+              <Text style={styles.statValue}>{scoreboard.attempts}</Text>
+            </View>
+            <View style={styles.statRow}>
+              <Text style={styles.statLabel}>Wins:</Text>
+              <Text style={styles.statValue}>{scoreboard.wins}</Text>
+            </View>
+            <View style={styles.statRow}>
+              <Text style={styles.statLabel}>Win Rate:</Text>
+              <Text style={styles.statValue}>
+                {scoreboard.attempts > 0 
+                  ? ((scoreboard.wins / scoreboard.attempts) * 100).toFixed(1) + '%' 
+                  : '0%'}
+              </Text>
+            </View>
+          </View>
+    
+          <TouchableOpacity 
+            style={styles.resetButton}
+            onPress={handleReset}
+          >
+            <Text style={styles.resetButtonText}>Reset Stats</Text>
+          </TouchableOpacity>
         </View>
-    );
-};
-
-const styles = StyleSheet.create({
-    container: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#f8f8f8' },
-    title: { fontSize: 28, fontWeight: 'bold', marginBottom: 10 },
-    text: { fontSize: 20, marginVertical: 5 }
-});
-
-export default ScoreboardScreen;
+      );
+    };
+    
+    const styles = StyleSheet.create({
+      container: {
+        flex: 1,
+        padding: 20,
+        backgroundColor: '#f0f2f5'
+      },
+      title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#2c3e50',
+        marginBottom: 30,
+        textAlign: 'center'
+      },
+      statsBox: {
+        backgroundColor: 'white',
+        borderRadius: 10,
+        padding: 20,
+        marginBottom: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 2
+      },
+      statRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingVertical: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#ecf0f1'
+      },
+      statLabel: {
+        fontSize: 18,
+        color: '#7f8c8d'
+      },
+      statValue: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#2c3e50'
+      },
+      resetButton: {
+        backgroundColor: '#e74c3c',
+        padding: 15,
+        borderRadius: 8,
+        marginTop: 20
+      },
+      resetButtonText: {
+        color: 'white',
+        textAlign: 'center',
+        fontWeight: 'bold'
+      }
+    });
+    
+    export default ScoreboardScreen;

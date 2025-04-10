@@ -43,58 +43,115 @@ const TestScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            {!quizFinished ? (
-                <>
-                    <Text style={styles.title}>G1 Test</Text>
-                    <Text style={styles.question}>{questions[currentQuestionIndex]?.question}</Text>
-                    
-                    {questions[currentQuestionIndex]?.options.map((option, index) => {
-                        const isCorrect = option === questions[currentQuestionIndex].answer;
-                        const isSelected = option === selectedAnswer;
-                        return (
-                            <TouchableOpacity
-                                key={index}
-                                style={[
-                                    styles.optionButton,
-                                    isSelected
-                                        ? isCorrect
-                                            ? styles.correctAnswer
-                                            : styles.wrongAnswer
-                                        : selectedAnswer && isCorrect
-                                        ? styles.correctAnswer
-                                        : null
-                                ]}
-                                onPress={() => handleAnswerSelect(option)}
-                                disabled={selectedAnswer !== null}
-                            >
-                                <Text style={styles.optionText}>{option}</Text>
-                            </TouchableOpacity>
-                        );
-                    })}
-                </>
-            ) : (
-                <View style={styles.resultContainer}>
-                    <Text style={styles.resultText}>Quiz Finished!</Text>
-                    <Text style={styles.scoreText}>Your Score: {score} / {questions.length}</Text>
-                    <Button title="Restart Quiz" onPress={restartQuiz} />
-                    <Button title="Back to Home" onPress={() => navigation.goBack()} />
-                </View>
-            )}
+          {!quizFinished ? (
+            <>
+              <Text style={styles.progressText}>
+                Question {currentQuestionIndex + 1}/{questions.length}
+              </Text>
+              <View style={styles.questionBox}>
+                <Text style={styles.questionText}>{questions[currentQuestionIndex]?.question}</Text>
+              </View>
+    
+              {questions[currentQuestionIndex]?.options.map((option, index) => (
+                <TouchableOpacity
+                  key={index}
+                  style={[
+                    styles.optionButton,
+                    selectedAnswer === option && {
+                      backgroundColor: option === questions[currentQuestionIndex].answer 
+                        ? '#27ae60' // Green if correct
+                        : '#e74c3c' // Red if wrong
+                    }
+                  ]}
+                  onPress={() => handleAnswerSelect(option)}
+                  disabled={selectedAnswer !== null}
+                >
+                  <Text style={styles.optionText}>{option}</Text>
+                </TouchableOpacity>
+              ))}
+            </>
+          ) : (
+            <View style={styles.resultContainer}>
+              <Text style={styles.resultTitle}>Test Completed!</Text>
+              <Text style={styles.scoreText}>
+                Score: {score}/{questions.length}
+              </Text>
+              <TouchableOpacity 
+                style={styles.restartButton}
+                onPress={restartQuiz}
+              >
+                <Text style={styles.buttonText}>Try Again</Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
-    );
-};
-
-const styles = StyleSheet.create({
-    container: { flex: 1, padding: 20, justifyContent: 'center', alignItems: 'center', backgroundColor: '#f8f8f8' },
-    title: { fontSize: 24, fontWeight: 'bold', marginBottom: 20 },
-    question: { fontSize: 18, textAlign: 'center', marginBottom: 20 },
-    optionButton: { width: '80%', padding: 15, marginVertical: 5, backgroundColor: '#ddd', borderRadius: 10 },
-    optionText: { fontSize: 16, textAlign: 'center' },
-    correctAnswer: { backgroundColor: '#4CAF50' }, // Green for correct answer
-    wrongAnswer: { backgroundColor: '#F44336' }, // Red for wrong answer
-    resultContainer: { alignItems: 'center' },
-    resultText: { fontSize: 24, fontWeight: 'bold', marginBottom: 10 },
-    scoreText: { fontSize: 20, marginBottom: 20 }
-});
-
-export default TestScreen;
+      );
+    };
+    
+    const styles = StyleSheet.create({
+      container: {
+        flex: 1,
+        padding: 20,
+        backgroundColor: '#f0f2f5'
+      },
+      progressText: {
+        color: '#7f8c8d',
+        marginBottom: 20,
+        textAlign: 'center'
+      },
+      questionBox: {
+        backgroundColor: 'white',
+        padding: 20,
+        borderRadius: 10,
+        marginBottom: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 2
+      },
+      questionText: {
+        fontSize: 18,
+        color: '#2c3e50',
+        lineHeight: 24
+      },
+      optionButton: {
+        backgroundColor: '#ecf0f1',
+        padding: 15,
+        borderRadius: 8,
+        marginBottom: 10
+      },
+      optionText: {
+        fontSize: 16,
+        color: '#2c3e50'
+      },
+      resultContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+      },
+      resultTitle: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#2c3e50',
+        marginBottom: 20
+      },
+      scoreText: {
+        fontSize: 20,
+        color: '#2c3e50',
+        marginBottom: 30
+      },
+      restartButton: {
+        backgroundColor: '#3498db',
+        padding: 15,
+        borderRadius: 8,
+        width: '80%'
+      },
+      buttonText: {
+        color: 'white',
+        textAlign: 'center',
+        fontWeight: 'bold'
+      }
+    });
+    
+    export default TestScreen;
