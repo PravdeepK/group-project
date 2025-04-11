@@ -21,12 +21,14 @@ const TestHistoryScreen = () => {
     loadTests();
   }, []);
 
+  // Format the timestamp to a readable date
   const getFormattedDate = (timestamp) => {
     if (!timestamp || !timestamp.toDate) return '';
     const date = timestamp.toDate();
     return date.toLocaleString();
   };
 
+  // Render each test result
   const renderTest = ({ item }) => (
     <View style={styles.testCard}>
       <Text style={styles.date}>{getFormattedDate(item.timestamp)}</Text>
@@ -47,6 +49,7 @@ const TestHistoryScreen = () => {
     );
   }
 
+  // If no tests are found, show a message
   if (tests.length === 0) {
     return (
       <View style={styles.center}>
@@ -55,6 +58,7 @@ const TestHistoryScreen = () => {
     );
   }
 
+  // Render the test history
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Test History</Text>

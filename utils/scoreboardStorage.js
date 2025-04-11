@@ -14,6 +14,9 @@ import {
 
 const SCOREBOARD_DOC = 'scoreboard/stats';
 
+//  Get the scoreboard stats
+//  (attempts, wins, losses)
+//  If the document doesn't exist, return default values
 export const getScoreboard = async () => {
   try {
     const docRef = doc(db, SCOREBOARD_DOC);
@@ -25,6 +28,8 @@ export const getScoreboard = async () => {
   }
 };
 
+//  Update the scoreboard stats
+//  Increment attempts, wins, or losses based on the game result
 export const updateScoreboard = async (isWin) => {
   try {
     const data = await getScoreboard();
@@ -39,6 +44,8 @@ export const updateScoreboard = async (isWin) => {
   }
 };
 
+//  Reset the scoreboard stats
+//  Set attempts, wins, and losses to 0
 export const resetScoreboard = async () => {
   try {
     await setDoc(doc(db, SCOREBOARD_DOC), {
@@ -51,6 +58,7 @@ export const resetScoreboard = async () => {
   }
 };
 
+// Record test results
 export const recordTestResult = async ({ score, total, correctQuestions, wrongQuestions }) => {
   try {
     await addDoc(collection(db, 'tests'), {
@@ -67,6 +75,7 @@ export const recordTestResult = async ({ score, total, correctQuestions, wrongQu
   }
 };
 
+// Get test history
 export const getTestHistory = async () => {
   try {
     const q = query(collection(db, 'tests'), orderBy('timestamp', 'desc'));
@@ -88,7 +97,7 @@ export const clearTestHistory = async () => {
   }
 };
 
-// ✅ Save failed questions (merged without duplicates)
+// Save failed questions (merged without duplicates)
 export const saveFailedQuestions = async (newFails) => {
   try {
     const docRef = doc(db, 'failed', 'latest');
@@ -110,7 +119,7 @@ export const saveFailedQuestions = async (newFails) => {
   }
 };
 
-// ✅ Get failed questions
+// Get failed questions
 export const getFailedQuestions = async () => {
   try {
     const docRef = doc(db, 'failed', 'latest');
@@ -122,17 +131,17 @@ export const getFailedQuestions = async () => {
   }
 };
 
-// ✅ Save completed retry questions
+// Save completed retry questions
 export const saveCompletedQuestions = async (questions) => {
   try {
     await setDoc(doc(db, 'completed', 'latest'), { questions });
-    console.log('✅ Completed questions saved to Firestore');
+    console.log('Completed questions saved to Firestore');
   } catch (error) {
     console.error('Error saving completed questions:', error);
   }
 };
 
-// ✅ Update remaining failed questions
+// Update remaining failed questions
 export const updateFailedQuestionsAfterRetry = async (remainingFailed) => {
   try {
     await setDoc(doc(db, 'failed', 'latest'), { questions: remainingFailed });

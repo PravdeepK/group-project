@@ -14,6 +14,8 @@ const TestScreen = ({ navigation }) => {
   const [correctQuestions, setCorrectQuestions] = useState([]);
   const [wrongQuestions, setWrongQuestions] = useState([]);
 
+  // Shuffle and randomize questions and options
+  // Select 15 random questions from the dataset
   useEffect(() => {
     const shuffled = [...questionsData]
       .sort(() => Math.random() - 0.5)
@@ -22,12 +24,14 @@ const TestScreen = ({ navigation }) => {
     setQuestions(shuffled);
   }, []);
 
+  // Handle answer selection
   const handleAnswerSelect = (answer) => {
     const current = questions[currentQuestionIndex];
     const isCorrect = answer === current.answer;
 
     setSelectedAnswer(answer);
 
+    // Update the current question with the user's selected answer
     if (isCorrect) {
       setScore(prev => prev + 1);
       setCorrectQuestions(prev => [...prev, current]);
@@ -43,6 +47,7 @@ const TestScreen = ({ navigation }) => {
         const finalScore = isCorrect ? score + 1 : score;
         setQuizFinished(true);
 
+        // Record the test result
         recordTestResult({
           score: finalScore,
           total: questions.length,
@@ -50,6 +55,7 @@ const TestScreen = ({ navigation }) => {
           wrongQuestions: !isCorrect ? [...wrongQuestions, current] : wrongQuestions
         });
 
+        // Save failed questions for retry
         saveFailedQuestions(
           !isCorrect ? [...wrongQuestions, current] : wrongQuestions
         );
@@ -59,6 +65,7 @@ const TestScreen = ({ navigation }) => {
     }, 2000);
   };
 
+  // Restart the quiz
   const restartQuiz = () => {
     setCurrentQuestionIndex(0);
     setSelectedAnswer(null);

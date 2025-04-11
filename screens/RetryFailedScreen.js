@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from "react";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import {
   getFailedQuestions,
   saveCompletedQuestions,
-  updateFailedQuestionsAfterRetry
-} from '../utils/scoreboardStorage';
+  updateFailedQuestionsAfterRetry,
+} from "../utils/scoreboardStorage";
 
 const shuffleArray = (array) => [...array].sort(() => Math.random() - 0.5);
 
@@ -19,14 +19,15 @@ const RetryFailedScreen = ({ navigation }) => {
     const loadFailedQuestions = async () => {
       const failed = await getFailedQuestions();
 
-      // Deduplicate based on question ID
+      // If no failed questions, return early
       const unique = failed.filter(
-        (q, index, self) => index === self.findIndex(other => other.id === q.id)
+        (q, index, self) =>
+          index === self.findIndex((other) => other.id === q.id)
       );
-
-      const randomized = shuffleArray(unique).map(q => ({
+      // Shuffle and randomize options
+      const randomized = shuffleArray(unique).map((q) => ({
         ...q,
-        options: shuffleArray(q.options)
+        options: shuffleArray(q.options),
       }));
 
       setQuestions(randomized);
@@ -35,17 +36,21 @@ const RetryFailedScreen = ({ navigation }) => {
     loadFailedQuestions();
   }, []);
 
+  // Handle answer selection
+  // Check if the answer is correct
+  // Update the selected answer and score
   const handleAnswerSelect = (answer) => {
     const current = questions[currentQuestionIndex];
     const isCorrect = answer === current.answer;
 
     current.userSelected = answer;
     setSelectedAnswer(answer);
-    if (isCorrect) setScore(prev => prev + 1);
+    if (isCorrect) setScore((prev) => prev + 1);
 
+    // Delay for 2 seconds before moving to the next question
     setTimeout(() => {
       if (currentQuestionIndex + 1 < questions.length) {
-        setCurrentQuestionIndex(prev => prev + 1);
+        setCurrentQuestionIndex((prev) => prev + 1);
         setSelectedAnswer(null);
       } else {
         setQuizFinished(true);
@@ -53,7 +58,7 @@ const RetryFailedScreen = ({ navigation }) => {
         const passed = [];
         const failedAgain = [];
 
-        questions.forEach(q => {
+        questions.forEach((q) => {
           if (q.userSelected === q.answer) {
             passed.push(q);
           } else {
@@ -70,18 +75,20 @@ const RetryFailedScreen = ({ navigation }) => {
     }, 2000);
   };
 
+  // Restart the quiz
   const restartQuiz = () => {
     setCurrentQuestionIndex(0);
     setSelectedAnswer(null);
     setScore(0);
     setQuizFinished(false);
-    const reshuffled = shuffleArray(questions).map(q => ({
+    const reshuffled = shuffleArray(questions).map((q) => ({
       ...q,
-      options: shuffleArray(q.options)
+      options: shuffleArray(q.options),
     }));
     setQuestions(reshuffled);
   };
 
+  // If no questions, show a message
   if (questions.length === 0) {
     return (
       <View style={styles.container}>
@@ -91,6 +98,7 @@ const RetryFailedScreen = ({ navigation }) => {
   }
 
   return (
+    // Main component
     <View style={styles.container}>
       {!quizFinished ? (
         <>
@@ -103,18 +111,20 @@ const RetryFailedScreen = ({ navigation }) => {
             </Text>
           </View>
 
+          {/* Map through the options and display them */}
           {questions[currentQuestionIndex]?.options.map((option, index) => (
             <TouchableOpacity
               key={index}
               style={[
                 styles.optionButton,
-                selectedAnswer !== null && option === questions[currentQuestionIndex].answer && {
-                  backgroundColor: '#27ae60'
-                },
+                selectedAnswer !== null &&
+                  option === questions[currentQuestionIndex].answer && {
+                    backgroundColor: "#27ae60",
+                  },
                 selectedAnswer === option &&
-                selectedAnswer !== questions[currentQuestionIndex].answer && {
-                  backgroundColor: '#e74c3c'
-                }
+                  selectedAnswer !== questions[currentQuestionIndex].answer && {
+                    backgroundColor: "#e74c3c",
+                  },
               ]}
               onPress={() => handleAnswerSelect(option)}
               disabled={selectedAnswer !== null}
@@ -124,15 +134,21 @@ const RetryFailedScreen = ({ navigation }) => {
           ))}
         </>
       ) : (
+        // If quiz is finished, show the result
         <View style={styles.resultContainer}>
           <Text style={styles.resultTitle}>Retake Complete!</Text>
-          <Text style={styles.scoreText}>Score: {score}/{questions.length}</Text>
+          <Text style={styles.scoreText}>
+            Score: {score}/{questions.length}
+          </Text>
 
           <TouchableOpacity style={styles.restartButton} onPress={restartQuiz}>
             <Text style={styles.buttonText}>Retry Again</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.homeButton} onPress={() => navigation.navigate('Home')}>
+          <TouchableOpacity
+            style={styles.homeButton}
+            onPress={() => navigation.navigate("Home")}
+          >
             <Text style={styles.buttonText}>Back to Home</Text>
           </TouchableOpacity>
         </View>
@@ -142,67 +158,67 @@ const RetryFailedScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, backgroundColor: '#f0f2f5' },
-  progressText: { color: '#7f8c8d', marginBottom: 20, textAlign: 'center' },
+  container: { flex: 1, padding: 20, backgroundColor: "#f0f2f5" },
+  progressText: { color: "#7f8c8d", marginBottom: 20, textAlign: "center" },
   questionBox: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     padding: 20,
     borderRadius: 10,
     marginBottom: 20,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 2
+    elevation: 2,
   },
-  questionText: { fontSize: 18, color: '#2c3e50', lineHeight: 24 },
+  questionText: { fontSize: 18, color: "#2c3e50", lineHeight: 24 },
   optionButton: {
-    backgroundColor: '#ecf0f1',
+    backgroundColor: "#ecf0f1",
     padding: 15,
     borderRadius: 8,
-    marginBottom: 10
+    marginBottom: 10,
   },
-  optionText: { fontSize: 16, color: '#2c3e50' },
+  optionText: { fontSize: 16, color: "#2c3e50" },
   resultContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: "center",
+    alignItems: "center",
   },
   resultTitle: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#2c3e50',
-    marginBottom: 20
+    fontWeight: "bold",
+    color: "#2c3e50",
+    marginBottom: 20,
   },
   scoreText: {
     fontSize: 20,
-    color: '#2c3e50',
-    marginBottom: 30
+    color: "#2c3e50",
+    marginBottom: 30,
   },
   restartButton: {
-    backgroundColor: '#3498db',
+    backgroundColor: "#3498db",
     padding: 15,
     borderRadius: 8,
-    width: '80%',
-    marginBottom: 10
+    width: "80%",
+    marginBottom: 10,
   },
   homeButton: {
-    backgroundColor: '#2ecc71',
+    backgroundColor: "#2ecc71",
     padding: 15,
     borderRadius: 8,
-    width: '80%',
-    marginTop: 10
+    width: "80%",
+    marginTop: 10,
   },
   buttonText: {
-    color: 'white',
-    textAlign: 'center',
-    fontWeight: 'bold'
+    color: "white",
+    textAlign: "center",
+    fontWeight: "bold",
   },
   title: {
     fontSize: 20,
-    color: '#2c3e50',
-    textAlign: 'center'
-  }
+    color: "#2c3e50",
+    textAlign: "center",
+  },
 });
 
 export default RetryFailedScreen;

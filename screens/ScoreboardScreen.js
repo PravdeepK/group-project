@@ -11,6 +11,7 @@ const ScoreboardScreen = () => {
   useEffect(() => {
     const docRef = doc(db, 'scoreboard', 'stats');
 
+    // Listen for real-time updates to the scoreboard
     const unsubscribe = onSnapshot(docRef, (docSnap) => {
       if (docSnap.exists()) {
         setScoreboard(docSnap.data());
@@ -26,6 +27,7 @@ const ScoreboardScreen = () => {
     return () => unsubscribe();
   }, []);
 
+  // Function to handle the reset confirmation
   const handleResetConfirmed = async () => {
     try {
       await resetScoreboard();
@@ -36,6 +38,8 @@ const ScoreboardScreen = () => {
     }
   };
 
+  // Function to handle the reset button press
+  // Show an alert to confirm the reset action
   const handleReset = () => {
     Alert.alert(
       'Reset Stats?',
@@ -55,6 +59,7 @@ const ScoreboardScreen = () => {
     );
   }
 
+  // data
   const winRate = scoreboard.attempts > 0
     ? ((scoreboard.wins / scoreboard.attempts) * 100).toFixed(1) + '%'
     : '0%';
