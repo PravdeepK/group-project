@@ -1,35 +1,47 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ActivityIndicator,
+  Alert
+} from 'react-native';
+
 import { db } from '../utils/firebase';
 import { doc, onSnapshot } from 'firebase/firestore';
+
 import {
   resetScoreboard,
   clearTestHistory,
   updateFailedQuestionsAfterRetry,
-  resetNotCompletedQuestions
+  resetNotCompletedQuestions,
+  clearCompletedQuestions
 } from '../utils/scoreboardStorage';
 
+// ScoreboardScreen component
+// This component displays the user's test statistics and allows them to reset their stats
+// It fetches data from Firestore and updates the local state
+// It also provides a reset functionality that clears the test history and resets the scoreboard
 const ScoreboardScreen = () => {
   const [scoreboard, setScoreboard] = useState({ attempts: 0, wins: 0, losses: 0 });
   const [loading, setLoading] = useState(true);
 
-  // Load scoreboard stats from Firestore
   useEffect(() => {
     const docRef = doc(db, 'scoreboard', 'stats');
 
-    // Listen for real-time updates to the scoreboard
+    // Listen for changes in the Firestore document
+    // and update the local state accordingly
     const unsubscribe = onSnapshot(
       docRef,
       (docSnap) => {
         if (docSnap.exists()) {
           setScoreboard(docSnap.data());
         } else {
-          // If the document doesn't exist, set default values of 0
           setScoreboard({ attempts: 0, wins: 0, losses: 0 });
         }
         setLoading(false);
       },
-      // Handle errors
       (error) => {
         console.error('Error loading scoreboard:', error);
         setLoading(false);
@@ -39,24 +51,28 @@ const ScoreboardScreen = () => {
     return () => unsubscribe();
   }, []);
 
-  // Handle reset confirmation
+  // Function to handle the reset confirmation
+  // It shows an alert to confirm the reset action
+  // If confirmed, it resets the scoreboard and clears the test history
   const handleResetConfirmed = async () => {
     try {
       await resetScoreboard();
       await clearTestHistory();
       await updateFailedQuestionsAfterRetry([]);
       await resetNotCompletedQuestions();
+      await clearCompletedQuestions();
       setScoreboard({ attempts: 0, wins: 0, losses: 0 });
     } catch (error) {
       console.error('Failed to reset stats and history:', error);
     }
   };
 
-  // Show confirmation alert before resetting stats
+  // Function to handle the reset action
+  // It shows an alert to confirm the reset action
   const handleReset = () => {
     Alert.alert(
       'Reset Stats?',
-      'This will erase all test attempts, failed questions, and reset all questions to not completed.',
+      'This will erase all test attempts, failed and completed questions, and reset all questions to not completed.',
       [
         { text: 'Cancel', style: 'cancel' },
         { text: 'Reset', style: 'destructive', onPress: handleResetConfirmed }
@@ -64,7 +80,7 @@ const ScoreboardScreen = () => {
     );
   };
 
-  // Render loading indicator while fetching data
+  // If loading, show an activity indicator
   if (loading) {
     return (
       <View style={styles.container}>
@@ -73,7 +89,7 @@ const ScoreboardScreen = () => {
     );
   }
 
-  // Calculate win rate
+  // Calculate the win rate based on the scoreboard data
   const winRate =
     scoreboard.attempts > 0
       ? ((scoreboard.wins / scoreboard.attempts) * 100).toFixed(1) + '%'
