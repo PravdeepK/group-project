@@ -1,34 +1,40 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { db } from './firebase';
+import { ref, get, set, update } from 'firebase/database';
 
-const SCOREBOARD_KEY = 'scoreboard';
+const SCOREBOARD_PATH = 'scoreboard';
 
 export const getScoreboard = async () => {
-    try {
-        const scoreboard = await AsyncStorage.getItem(SCOREBOARD_KEY);
-        return scoreboard ? JSON.parse(scoreboard) : { attempts: 0, wins: 0 };
-    } catch (error) {
-        console.error('Error loading scoreboard:', error);
-        return { attempts: 0, wins: 0 };
+  try {
+    const snapshot = await get(ref(db, SCOREBOARD_PATH));
+    if (snapshot.exists()) {
+      return snapshot.val();
+    } else {
+      return { attempts: 0, wins: 0 };
     }
+  } catch (error) {
+    console.error('Error fetching scoreboard:', error);
+    return { attempts: 0, wins: 0 };
+  }
 };
 
 export const updateScoreboard = async (isWin) => {
-    try {
-        const scoreboard = await getScoreboard();
-        scoreboard.attempts += 1;
-        if (isWin) {
-            scoreboard.wins += 1;
-        }
-        await AsyncStorage.setItem(SCOREBOARD_KEY, JSON.stringify(scoreboard));
-    } catch (error) {
-        console.error('Error updating scoreboard:', error);
-    }
+  try {
+    const data = await getScoreboard();
+    const newData = {
+      attempts: (data.attempts || 0) + 1,
+      wins: (data.wins || 0) + (isWin ? 1 : 0)
+    };
+
+    await set(ref(db, SCOREBOARD_PATH), newData);
+  } catch (error) {
+    console.error('Error updating scoreboard:', error);
+  }
 };
 
 export const resetScoreboard = async () => {
-    try {
-        await AsyncStorage.removeItem(SCOREBOARD_KEY);
-    } catch (error) {
-        console.error('Error resetting scoreboard:', error);
-    }
+  try {
+    await set(ref(db, SCOREBOARD_PATH), { attempts: 0, wins: 0 });
+  } catch (error) {
+    console.error('Error resetting scoreboard:', error);
+  }
 };

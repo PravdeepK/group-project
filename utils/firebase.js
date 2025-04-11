@@ -1,17 +1,23 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { initializeApp } from 'firebase/app';
+import { getDatabase } from 'firebase/database';
 
-// Your web app's Firebase configuration
+import {
+  FIREBASE_API_KEY,
+  FIREBASE_AUTH_DOMAIN,
+  FIREBASE_PROJECT_ID,
+  FIREBASE_STORAGE_BUCKET,
+  FIREBASE_MESSAGING_SENDER_ID,
+  FIREBASE_APP_ID
+} from '@env';
+
 const firebaseConfig = {
-  apiKey: "AIzaSyA6XgiYs_piZqXnOzqlLDiHSOsRI0yb310",
-  authDomain: "cross-plat-gp.firebaseapp.com",
-  projectId: "cross-plat-gp",
-  storageBucket: "cross-plat-gp.firebasestorage.app",
-  messagingSenderId: "148137404138",
-  appId: "1:148137404138:web:ee29034bbdd97d3aa7d993"
+  apiKey: FIREBASE_API_KEY,
+  authDomain: FIREBASE_AUTH_DOMAIN,
+  projectId: FIREBASE_PROJECT_ID,
+  storageBucket: FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: FIREBASE_MESSAGING_SENDER_ID,
+  appId: FIREBASE_APP_ID
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
+export const db = getDatabase(app);
