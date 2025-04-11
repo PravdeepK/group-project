@@ -18,7 +18,7 @@ const TestScreen = ({ navigation }) => {
     const shuffled = [...questionsData]
       .sort(() => Math.random() - 0.5)
       .slice(0, 15)
-      .map((q) => ({ ...q, options: shuffleArray(q.options) }));
+      .map(q => ({ ...q, options: shuffleArray(q.options) }));
     setQuestions(shuffled);
   }, []);
 
@@ -69,7 +69,7 @@ const TestScreen = ({ navigation }) => {
     const reshuffled = [...questionsData]
       .sort(() => Math.random() - 0.5)
       .slice(0, 15)
-      .map((q) => ({ ...q, options: shuffleArray(q.options) }));
+      .map(q => ({ ...q, options: shuffleArray(q.options) }));
     setQuestions(reshuffled);
   };
 
@@ -107,8 +107,13 @@ const TestScreen = ({ navigation }) => {
         <View style={styles.resultContainer}>
           <Text style={styles.resultTitle}>Test Completed!</Text>
           <Text style={styles.scoreText}>Score: {score}/{questions.length}</Text>
+
           <TouchableOpacity style={styles.restartButton} onPress={restartQuiz}>
             <Text style={styles.buttonText}>Try Again</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.homeButton} onPress={() => navigation.navigate('Home')}>
+            <Text style={styles.buttonText}>Back to Home</Text>
           </TouchableOpacity>
         </View>
       )}
@@ -119,15 +124,47 @@ const TestScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, backgroundColor: '#f0f2f5' },
   progressText: { color: '#7f8c8d', marginBottom: 20, textAlign: 'center' },
-  questionBox: { backgroundColor: 'white', padding: 20, borderRadius: 10, marginBottom: 20 },
+  questionBox: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2
+  },
   questionText: { fontSize: 18, color: '#2c3e50', lineHeight: 24 },
-  optionButton: { backgroundColor: '#ecf0f1', padding: 15, borderRadius: 8, marginBottom: 10 },
+  optionButton: {
+    backgroundColor: '#ecf0f1',
+    padding: 15,
+    borderRadius: 8,
+    marginBottom: 10
+  },
   optionText: { fontSize: 16, color: '#2c3e50' },
   resultContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   resultTitle: { fontSize: 24, fontWeight: 'bold', color: '#2c3e50', marginBottom: 20 },
   scoreText: { fontSize: 20, color: '#2c3e50', marginBottom: 30 },
-  restartButton: { backgroundColor: '#3498db', padding: 15, borderRadius: 8, width: '80%' },
-  buttonText: { color: 'white', textAlign: 'center', fontWeight: 'bold' }
+  restartButton: {
+    backgroundColor: '#3498db',
+    padding: 15,
+    borderRadius: 8,
+    width: '80%',
+    marginBottom: 10
+  },
+  homeButton: {
+    backgroundColor: '#2ecc71',
+    padding: 15,
+    borderRadius: 8,
+    width: '80%',
+    marginTop: 10
+  },
+  buttonText: {
+    color: 'white',
+    textAlign: 'center',
+    fontWeight: 'bold'
+  }
 });
 
 export default TestScreen;

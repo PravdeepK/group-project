@@ -88,16 +88,29 @@ export const clearTestHistory = async () => {
   }
 };
 
-// Save failed questions
-export const saveFailedQuestions = async (questions) => {
+// ✅ Save failed questions (merged without duplicates)
+export const saveFailedQuestions = async (newFails) => {
   try {
-    await setDoc(doc(db, 'failed', 'latest'), { questions });
+    const docRef = doc(db, 'failed', 'latest');
+    const snapshot = await getDoc(docRef);
+    let currentFails = snapshot.exists() ? snapshot.data().questions || [] : [];
+
+    // Merge unique
+    const merged = [...currentFails];
+    newFails.forEach(q => {
+      if (!merged.some(existing => existing.id === q.id)) {
+        merged.push(q);
+      }
+    });
+
+    await setDoc(docRef, { questions: merged });
+    console.log('❌ Failed questions merged and saved.');
   } catch (error) {
     console.error('Error saving failed questions:', error);
   }
 };
 
-// Get failed questions
+// ✅ Get failed questions
 export const getFailedQuestions = async () => {
   try {
     const docRef = doc(db, 'failed', 'latest');
@@ -106,5 +119,25 @@ export const getFailedQuestions = async () => {
   } catch (error) {
     console.error('Error loading failed questions:', error);
     return [];
+  }
+};
+
+// ✅ Save completed retry questions
+export const saveCompletedQuestions = async (questions) => {
+  try {
+    await setDoc(doc(db, 'completed', 'latest'), { questions });
+    console.log('✅ Completed questions saved to Firestore');
+  } catch (error) {
+    console.error('Error saving completed questions:', error);
+  }
+};
+
+// ✅ Update remaining failed questions
+export const updateFailedQuestionsAfterRetry = async (remainingFailed) => {
+  try {
+    await setDoc(doc(db, 'failed', 'latest'), { questions: remainingFailed });
+    console.log('🔄 Updated failed questions after retry');
+  } catch (error) {
+    console.error('Error updating failed questions after retry:', error);
   }
 };
