@@ -1,152 +1,756 @@
 [
-    {
-        "id": 1,
-        "question": "What does a flashing red traffic light mean?",
-        "options": ["Stop completely and proceed when safe", "Slow down and proceed with caution", "Yield to traffic and proceed", "Proceed without stopping"],
-        "answer": "Stop completely and proceed when safe"
-    },
-    {
-        "id": 2,
-        "question": "When should you use high beam headlights?",
-        "options": ["When driving in fog", "When there are no other vehicles nearby", "In city traffic", "At all times during the night"],
-        "answer": "When there are no other vehicles nearby"
-    },
-    {
-        "id": 3,
-        "question": "What is the legal blood alcohol concentration (BAC) limit for novice drivers in Ontario?",
-        "options": ["0.08%", "0.05%", "0.02%", "0.00%"],
-        "answer": "0.00%"
-    },
-    {
-        "id": 4,
-        "question": "When can you turn right on a red light in Ontario?",
-        "options": ["After making a complete stop and ensuring it is safe", "Anytime without stopping", "Only when a green light appears", "Only when there is a right-turn signal"],
-        "answer": "After making a complete stop and ensuring it is safe"
-    },
-    {
-        "id": 5,
-        "question": "What does a solid yellow line next to a broken yellow line on a two-lane road mean?",
-        "options": ["Passing is allowed from both sides", "Passing is allowed only on the side with the broken line", "Passing is never allowed", "You must stop immediately"],
-        "answer": "Passing is allowed only on the side with the broken line"
-    },
-    {
-        "id": 6,
-        "question": "What should you do if you approach a school bus with flashing red lights?",
-        "options": ["Stop at least 20 metres away", "Slow down and pass with caution", "Honk to alert pedestrians", "Proceed if there are no children in sight"],
-        "answer": "Stop at least 20 metres away"
-    },
-    {
-        "id": 7,
-        "question": "If your vehicle starts to skid, what should you do?",
-        "options": ["Turn the steering wheel in the opposite direction of the skid", "Brake hard and hold the wheel straight", "Turn the steering wheel in the same direction as the skid", "Accelerate to regain control"],
-        "answer": "Turn the steering wheel in the same direction as the skid"
-    },
-    {
-        "id": 8,
-        "question": "When parking uphill with a curb, which way should you turn your wheels?",
-        "options": ["To the left (away from the curb)", "To the right (toward the curb)", "Keep them straight", "It doesn’t matter"],
-        "answer": "To the left (away from the curb)"
-    },
-    {
-        "id": 9,
-        "question": "What should you do when you hear or see an emergency vehicle approaching?",
-        "options": ["Slow down but continue driving", "Stop immediately where you are", "Move to the right and stop", "Speed up to get out of the way"],
-        "answer": "Move to the right and stop"
-    },
-    {
-        "id": 10,
-        "question": "What does a diamond-shaped road sign indicate?",
-        "options": ["A regulatory sign", "A warning sign", "A speed limit sign", "A no-parking zone"],
-        "answer": "A warning sign"
-    },
-    {
-        "id": 11,
-        "question": "What should you do if you miss your exit on a highway?",
-        "options": ["Stop and reverse on the shoulder", "Make a U-turn at the nearest opening", "Continue to the next exit", "Drive onto the median and turn around"],
-        "answer": "Continue to the next exit"
-    },
-    {
-        "id": 12,
-        "question": "What does a flashing green light at an intersection mean?",
-        "options": ["Stop immediately", "Go with caution", "Turn left only", "Pedestrians have right of way"],
-        "answer": "Go with caution"
-    },
-    {
-        "id": 13,
-        "question": "How far should you park from a fire hydrant?",
-        "options": ["1 meter", "3 meters", "5 meters", "10 meters"],
-        "answer": "3 meters"
-    },
-    {
-        "id": 14,
-        "question": "What is the speed limit in school zones during school hours?",
-        "options": ["30 km/h", "40 km/h", "50 km/h", "60 km/h"],
-        "answer": "40 km/h"
-    },
-    {
-        "id": 15,
-        "question": "What should you do when approaching a pedestrian crossing?",
-        "options": ["Slow down but continue driving", "Stop only if pedestrians are in your lane", "Come to a complete stop if pedestrians are crossing", "Honk to warn pedestrians"],
-        "answer": "Come to a complete stop if pedestrians are crossing"
-    },
-    {
-        "id": 16,
-        "question": "What is the minimum safe following distance in ideal driving conditions?",
-        "options": ["1 second", "2 seconds", "3 seconds", "4 seconds"],
-        "answer": "2 seconds"
-    },
-    {
-        "id": 17,
-        "question": "When driving behind a motorcycle, how much following distance should you allow?",
-        "options": ["1 second", "2 seconds", "3 seconds", "4 seconds"],
-        "answer": "3 seconds"
-    },
-    {
-        "id": 18,
-        "question": "What should you do if your brakes fail?",
-        "options": ["Pump the brakes and downshift", "Pull the parking brake immediately", "Turn off the engine and steer", "Accelerate to find a safe spot"],
-        "answer": "Pump the brakes and downshift"
-    },
-    {
-        "id": 19,
-        "question": "When must you yield to oncoming traffic?",
-        "options": ["When making a left turn", "When merging onto a highway", "At an uncontrolled intersection", "All of the above"],
-        "answer": "All of the above"
-    },
-    {
-        "id": 20,
-        "question": "What does a yellow traffic light mean?",
-        "options": ["Speed up before it turns red", "Stop if it is safe to do so", "Proceed at the same speed", "Ignore it"],
-        "answer": "Stop if it is safe to do so"
-    },
-    {
-        "id": 21,
-        "question": "What should you do if you are in an intersection waiting to turn left when the light turns red?",
-        "options": ["Reverse back into your lane", "Make the turn quickly", "Remain stopped until the light turns green again", "Complete the turn when it is safe"],
-        "answer": "Complete the turn when it is safe"
-    },
-    {
-        "id": 22,
-        "question": "What does a stop sign with a white rectangular sign below it mean?",
-        "options": ["You can proceed without stopping", "Only certain vehicles must stop", "It is an all-way stop", "It is a temporary stop sign"],
-        "answer": "It is an all-way stop"
-    },
-    {
-        "id": 23,
-        "question": "What should you do when driving in heavy rain?",
-        "options": ["Turn on your high beams", "Turn on low-beam headlights and drive slower", "Use cruise control", "Increase speed to avoid hydroplaning"],
-        "answer": "Turn on low-beam headlights and drive slower"
-    },
-    {
-        "id": 24,
-        "question": "What is hydroplaning?",
-        "options": ["A method of braking", "Sliding on a wet surface with loss of traction", "A way to steer safely", "Driving through a flooded area"],
-        "answer": "Sliding on a wet surface with loss of traction"
-    },
-    {
-        "id": 25,
-        "question": "What is the penalty for failing to stop for a school bus with flashing red lights?",
-        "options": ["A fine and demerit points", "License suspension", "Vehicle impoundment", "No penalty"],
-        "answer": "A fine and demerit points"
-    }
+  {
+    "id": 1,
+    "question": "What does a flashing red traffic light mean?",
+    "options": [
+      "Stop completely and proceed when safe",
+      "Slow down and proceed with caution",
+      "Yield to traffic and proceed",
+      "Proceed without stopping"
+    ],
+    "answer": "Stop completely and proceed when safe"
+  },
+  {
+    "id": 2,
+    "question": "When should you use high beam headlights?",
+    "options": [
+      "When driving in fog",
+      "When there are no other vehicles nearby",
+      "In city traffic",
+      "At all times during the night"
+    ],
+    "answer": "When there are no other vehicles nearby"
+  },
+  {
+    "id": 3,
+    "question": "What is the legal blood alcohol concentration (BAC) limit for novice drivers in Ontario?",
+    "options": ["0.08%", "0.05%", "0.02%", "0.00%"],
+    "answer": "0.00%"
+  },
+  {
+    "id": 4,
+    "question": "When can you turn right on a red light in Ontario?",
+    "options": [
+      "After making a complete stop and ensuring it is safe",
+      "Anytime without stopping",
+      "Only when a green light appears",
+      "Only when there is a right-turn signal"
+    ],
+    "answer": "After making a complete stop and ensuring it is safe"
+  },
+  {
+    "id": 5,
+    "question": "What does a solid yellow line next to a broken yellow line on a two-lane road mean?",
+    "options": [
+      "Passing is allowed from both sides",
+      "Passing is allowed only on the side with the broken line",
+      "Passing is never allowed",
+      "You must stop immediately"
+    ],
+    "answer": "Passing is allowed only on the side with the broken line"
+  },
+  {
+    "id": 6,
+    "question": "What should you do if you approach a school bus with flashing red lights?",
+    "options": [
+      "Stop at least 20 metres away",
+      "Slow down and pass with caution",
+      "Honk to alert pedestrians",
+      "Proceed if there are no children in sight"
+    ],
+    "answer": "Stop at least 20 metres away"
+  },
+  {
+    "id": 7,
+    "question": "If your vehicle starts to skid, what should you do?",
+    "options": [
+      "Turn the steering wheel in the opposite direction of the skid",
+      "Brake hard and hold the wheel straight",
+      "Turn the steering wheel in the same direction as the skid",
+      "Accelerate to regain control"
+    ],
+    "answer": "Turn the steering wheel in the same direction as the skid"
+  },
+  {
+    "id": 8,
+    "question": "When parking uphill with a curb, which way should you turn your wheels?",
+    "options": [
+      "To the left (away from the curb)",
+      "To the right (toward the curb)",
+      "Keep them straight",
+      "It doesn’t matter"
+    ],
+    "answer": "To the left (away from the curb)"
+  },
+  {
+    "id": 9,
+    "question": "What should you do when you hear or see an emergency vehicle approaching?",
+    "options": [
+      "Slow down but continue driving",
+      "Stop immediately where you are",
+      "Move to the right and stop",
+      "Speed up to get out of the way"
+    ],
+    "answer": "Move to the right and stop"
+  },
+  {
+    "id": 10,
+    "question": "What does a diamond-shaped road sign indicate?",
+    "options": [
+      "A regulatory sign",
+      "A warning sign",
+      "A speed limit sign",
+      "A no-parking zone"
+    ],
+    "answer": "A warning sign"
+  },
+  {
+    "id": 11,
+    "question": "What should you do if you miss your exit on a highway?",
+    "options": [
+      "Stop and reverse on the shoulder",
+      "Make a U-turn at the nearest opening",
+      "Continue to the next exit",
+      "Drive onto the median and turn around"
+    ],
+    "answer": "Continue to the next exit"
+  },
+  {
+    "id": 12,
+    "question": "What does a flashing green light at an intersection mean?",
+    "options": [
+      "Stop immediately",
+      "Go with caution",
+      "Turn left only",
+      "Pedestrians have right of way"
+    ],
+    "answer": "Go with caution"
+  },
+  {
+    "id": 13,
+    "question": "How far should you park from a fire hydrant?",
+    "options": ["1 meter", "3 meters", "5 meters", "10 meters"],
+    "answer": "3 meters"
+  },
+  {
+    "id": 14,
+    "question": "What is the speed limit in school zones during school hours?",
+    "options": ["30 km/h", "40 km/h", "50 km/h", "60 km/h"],
+    "answer": "40 km/h"
+  },
+  {
+    "id": 15,
+    "question": "What should you do when approaching a pedestrian crossing?",
+    "options": [
+      "Slow down but continue driving",
+      "Stop only if pedestrians are in your lane",
+      "Come to a complete stop if pedestrians are crossing",
+      "Honk to warn pedestrians"
+    ],
+    "answer": "Come to a complete stop if pedestrians are crossing"
+  },
+  {
+    "id": 16,
+    "question": "What is the minimum safe following distance in ideal driving conditions?",
+    "options": ["1 second", "2 seconds", "3 seconds", "4 seconds"],
+    "answer": "2 seconds"
+  },
+  {
+    "id": 17,
+    "question": "When driving behind a motorcycle, how much following distance should you allow?",
+    "options": ["1 second", "2 seconds", "3 seconds", "4 seconds"],
+    "answer": "3 seconds"
+  },
+  {
+    "id": 18,
+    "question": "What should you do if your brakes fail?",
+    "options": [
+      "Pump the brakes and downshift",
+      "Pull the parking brake immediately",
+      "Turn off the engine and steer",
+      "Accelerate to find a safe spot"
+    ],
+    "answer": "Pump the brakes and downshift"
+  },
+  {
+    "id": 19,
+    "question": "When must you yield to oncoming traffic?",
+    "options": [
+      "When making a left turn",
+      "When merging onto a highway",
+      "At an uncontrolled intersection",
+      "All of the above"
+    ],
+    "answer": "All of the above"
+  },
+  {
+    "id": 20,
+    "question": "What does a yellow traffic light mean?",
+    "options": [
+      "Speed up before it turns red",
+      "Stop if it is safe to do so",
+      "Proceed at the same speed",
+      "Ignore it"
+    ],
+    "answer": "Stop if it is safe to do so"
+  },
+  {
+    "id": 21,
+    "question": "What should you do if you are in an intersection waiting to turn left when the light turns red?",
+    "options": [
+      "Reverse back into your lane",
+      "Make the turn quickly",
+      "Remain stopped until the light turns green again",
+      "Complete the turn when it is safe"
+    ],
+    "answer": "Complete the turn when it is safe"
+  },
+  {
+    "id": 22,
+    "question": "What does a stop sign with a white rectangular sign below it mean?",
+    "options": [
+      "You can proceed without stopping",
+      "Only certain vehicles must stop",
+      "It is an all-way stop",
+      "It is a temporary stop sign"
+    ],
+    "answer": "It is an all-way stop"
+  },
+  {
+    "id": 23,
+    "question": "What should you do when driving in heavy rain?",
+    "options": [
+      "Turn on your high beams",
+      "Turn on low-beam headlights and drive slower",
+      "Use cruise control",
+      "Increase speed to avoid hydroplaning"
+    ],
+    "answer": "Turn on low-beam headlights and drive slower"
+  },
+  {
+    "id": 24,
+    "question": "What is hydroplaning?",
+    "options": [
+      "A method of braking",
+      "Sliding on a wet surface with loss of traction",
+      "A way to steer safely",
+      "Driving through a flooded area"
+    ],
+    "answer": "Sliding on a wet surface with loss of traction"
+  },
+  {
+    "id": 25,
+    "question": "What is the penalty for failing to stop for a school bus with flashing red lights?",
+    "options": [
+      "A fine and demerit points",
+      "License suspension",
+      "Vehicle impoundment",
+      "No penalty"
+    ],
+    "answer": "A fine and demerit points"
+  },
+  {
+    "id": 26,
+    "question": "What is the purpose of a road test during the licensing process?",
+    "options": [
+      "To test your ability to parallel park only",
+      "To see how fast you can drive",
+      "To evaluate your practical driving skills",
+      "To inspect your vehicle"
+    ],
+    "answer": "To evaluate your practical driving skills"
+  },
+  {
+    "id": 27,
+    "question": "What should you do if a traffic light is not working at an intersection?",
+    "options": [
+      "Drive through carefully without stopping",
+      "Treat it as a four-way stop",
+      "Ignore it and continue as usual",
+      "Wait until someone else moves first"
+    ],
+    "answer": "Treat it as a four-way stop"
+  },
+  {
+    "id": 28,
+    "question": "Who has the right of way at a four-way stop?",
+    "options": [
+      "The last vehicle to arrive",
+      "The largest vehicle",
+      "The vehicle that arrives first",
+      "Vehicles turning left"
+    ],
+    "answer": "The vehicle that arrives first"
+  },
+  {
+    "id": 29,
+    "question": "When are you required to use headlights?",
+    "options": [
+      "Only in fog",
+      "Between sunset and sunrise or when visibility is poor",
+      "Only on highways",
+      "Only in rural areas"
+    ],
+    "answer": "Between sunset and sunrise or when visibility is poor"
+  },
+  {
+    "id": 30,
+    "question": "What is the penalty for driving without insurance in Ontario?",
+    "options": [
+      "$100 fine",
+      "$500 fine",
+      "License suspension and fine of up to $50,000",
+      "Warning only"
+    ],
+    "answer": "License suspension and fine of up to $50,000"
+  },
+  {
+    "id": 31,
+    "question": "What does a blue road sign indicate?",
+    "options": [
+      "Regulatory information",
+      "Motorist services",
+      "Construction zones",
+      "Hazard ahead"
+    ],
+    "answer": "Motorist services"
+  },
+  {
+    "id": 32,
+    "question": "What does a white rectangular sign indicate?",
+    "options": [
+      "Information only",
+      "Regulatory message (law)",
+      "Construction zone",
+      "School zone"
+    ],
+    "answer": "Regulatory message (law)"
+  },
+  {
+    "id": 33,
+    "question": "How far in advance should you signal before turning?",
+    "options": ["15 metres", "30 metres", "50 metres", "100 metres"],
+    "answer": "30 metres"
+  },
+  {
+    "id": 34,
+    "question": "What should you do if you see a yield sign?",
+    "options": [
+      "Speed up and merge",
+      "Come to a complete stop",
+      "Slow down and give the right of way if necessary",
+      "Ignore it if no cars are nearby"
+    ],
+    "answer": "Slow down and give the right of way if necessary"
+  },
+  {
+    "id": 35,
+    "question": "When is it legal to pass another vehicle on the right?",
+    "options": [
+      "Never",
+      "Only on a one-way street",
+      "When the other driver is turning left and it is safe",
+      "In a school zone"
+    ],
+    "answer": "When the other driver is turning left and it is safe"
+  },
+  {
+    "id": 36,
+    "question": "What should you do before changing lanes?",
+    "options": [
+      "Check mirrors and blind spots, then signal",
+      "Honk your horn",
+      "Speed up quickly",
+      "Swerve into the lane"
+    ],
+    "answer": "Check mirrors and blind spots, then signal"
+  },
+  {
+    "id": 37,
+    "question": "What does a broken white line on the road mean?",
+    "options": [
+      "Passing is not allowed",
+      "Lanes are for bicycles only",
+      "Passing is allowed when safe",
+      "Road ends ahead"
+    ],
+    "answer": "Passing is allowed when safe"
+  },
+  {
+    "id": 38,
+    "question": "Who must wear seatbelts in a moving vehicle?",
+    "options": [
+      "Only the driver",
+      "Only front seat passengers",
+      "Everyone in the vehicle",
+      "Only children under 16"
+    ],
+    "answer": "Everyone in the vehicle"
+  },
+  {
+    "id": 39,
+    "question": "If two vehicles arrive at a four-way stop at the same time, who goes first?",
+    "options": [
+      "The vehicle on the left",
+      "The vehicle on the right",
+      "The vehicle going straight",
+      "The largest vehicle"
+    ],
+    "answer": "The vehicle on the right"
+  },
+  {
+    "id": 40,
+    "question": "What should you do if an oncoming vehicle is driving toward you in your lane?",
+    "options": [
+      "Swerve into the oncoming lane",
+      "Brake hard and stop",
+      "Sound your horn, steer right, and brake",
+      "Turn left immediately"
+    ],
+    "answer": "Sound your horn, steer right, and brake"
+  },
+  {
+    "id": 41,
+    "question": "What does a no-stopping sign mean?",
+    "options": [
+      "You may stop for up to 5 minutes",
+      "You may stop to load or unload only",
+      "You may not stop your vehicle at any time",
+      "You may stop on weekends"
+    ],
+    "answer": "You may not stop your vehicle at any time"
+  },
+  {
+    "id": 42,
+    "question": "What should you do if a tire blows out while driving?",
+    "options": [
+      "Brake hard and steer off the road",
+      "Hold the steering wheel firmly and ease off the gas",
+      "Turn quickly to the side of the road",
+      "Accelerate to regain control"
+    ],
+    "answer": "Hold the steering wheel firmly and ease off the gas"
+  },
+  {
+    "id": 43,
+    "question": "When must headlights be dimmed?",
+    "options": [
+      "When approaching another vehicle within 150 metres",
+      "At all times on the highway",
+      "Only in the city",
+      "During daylight hours"
+    ],
+    "answer": "When approaching another vehicle within 150 metres"
+  },
+  {
+    "id": 44,
+    "question": "What is the hand signal for a left turn?",
+    "options": [
+      "Left arm out straight",
+      "Left arm bent up",
+      "Left arm bent down",
+      "Right arm out straight"
+    ],
+    "answer": "Left arm out straight"
+  },
+  {
+    "id": 45,
+    "question": "What does a circular railway crossing sign mean?",
+    "options": [
+      "A school zone is ahead",
+      "There is a detour ahead",
+      "You are approaching a railway crossing",
+      "No left turn allowed"
+    ],
+    "answer": "You are approaching a railway crossing"
+  },
+  {
+    "id": 46,
+    "question": "What should you do when backing up your vehicle?",
+    "options": [
+      "Check your rearview mirror only",
+      "Use only your backup camera",
+      "Look over your shoulder while reversing",
+      "Rely on parking sensors"
+    ],
+    "answer": "Look over your shoulder while reversing"
+  },
+  {
+    "id": 47,
+    "question": "What is the speed limit in cities, towns, and villages unless posted otherwise?",
+    "options": ["40 km/h", "50 km/h", "60 km/h", "70 km/h"],
+    "answer": "50 km/h"
+  },
+  {
+    "id": 48,
+    "question": "How can you avoid fatigue while driving long distances?",
+    "options": [
+      "Keep the window open",
+      "Drink coffee only",
+      "Take regular breaks",
+      "Drive faster"
+    ],
+    "answer": "Take regular breaks"
+  },
+  {
+    "id": 49,
+    "question": "What does a solid white line between lanes mean?",
+    "options": [
+      "You must not change lanes",
+      "You may pass anytime",
+      "It’s a construction warning",
+      "It marks pedestrian crosswalks"
+    ],
+    "answer": "You must not change lanes"
+  },
+  {
+    "id": 50,
+    "question": "What is the purpose of a blind spot check?",
+    "options": [
+      "To check your mirrors",
+      "To see vehicles not visible in your mirrors",
+      "To check your tire pressure",
+      "To look at road signs"
+    ],
+    "answer": "To see vehicles not visible in your mirrors"
+  },
+  {
+    "id": 51,
+    "question": "What should you do when driving down a steep hill?",
+    "options": [
+      "Put the car in neutral",
+      "Turn off the engine",
+      "Use a lower gear to help control speed",
+      "Press the gas pedal continuously"
+    ],
+    "answer": "Use a lower gear to help control speed"
+  },
+  {
+    "id": 52,
+    "question": "What does a yellow broken line mean?",
+    "options": [
+      "Passing is not allowed",
+      "Passing is allowed when safe",
+      "School zone ahead",
+      "One-way road"
+    ],
+    "answer": "Passing is allowed when safe"
+  },
+  {
+    "id": 53,
+    "question": "What should you do if your car starts to skid on ice?",
+    "options": [
+      "Brake hard",
+      "Turn in the direction you want the front wheels to go",
+      "Accelerate",
+      "Turn in the opposite direction"
+    ],
+    "answer": "Turn in the direction you want the front wheels to go"
+  },
+  {
+    "id": 54,
+    "question": "What does a white X on the road mean?",
+    "options": ["Railway crossing", "Stop sign ahead", "Yield", "No U-turn"],
+    "answer": "Railway crossing"
+  },
+  {
+    "id": 55,
+    "question": "What should you do if another driver is tailgating you?",
+    "options": [
+      "Brake hard",
+      "Speed up",
+      "Move to another lane if safe and let them pass",
+      "Ignore them"
+    ],
+    "answer": "Move to another lane if safe and let them pass"
+  },
+  {
+    "id": 56,
+    "question": "What should you do when approaching a railway crossing with flashing red lights?",
+    "options": [
+      "Proceed with caution",
+      "Stop at least 5 metres from the crossing",
+      "Speed up to cross quickly",
+      "Ignore the lights if no train is visible"
+    ],
+    "answer": "Stop at least 5 metres from the crossing"
+  },
+  {
+    "id": 57,
+    "question": "When driving in foggy conditions, you should:",
+    "options": [
+      "Use high beam headlights",
+      "Use low beam headlights",
+      "Turn off headlights",
+      "Use hazard lights only"
+    ],
+    "answer": "Use low beam headlights"
+  },
+  {
+    "id": 58,
+    "question": "What does a red circle with a diagonal slash over a black arrow mean?",
+    "options": ["No entry", "No parking", "No right turn", "No stopping"],
+    "answer": "No right turn"
+  },
+  {
+    "id": 59,
+    "question": "What is the minimum following distance you should maintain behind a large truck?",
+    "options": ["1 second", "2 seconds", "3 seconds", "4 seconds or more"],
+    "answer": "4 seconds or more"
+  },
+  {
+    "id": 60,
+    "question": "When are you allowed to pass another vehicle on the right?",
+    "options": [
+      "On a one-way street with two or more lanes",
+      "When the vehicle ahead is turning left and there is room on the right",
+      "Both A and B",
+      "Never"
+    ],
+    "answer": "Both A and B"
+  },
+  {
+    "id": 61,
+    "question": "What should you do if your vehicle starts to hydroplane?",
+    "options": [
+      "Brake hard immediately",
+      "Accelerate to gain traction",
+      "Ease off the accelerator and steer in the direction you want to go",
+      "Turn the steering wheel sharply"
+    ],
+    "answer": "Ease off the accelerator and steer in the direction you want to go"
+  },
+  {
+    "id": 62,
+    "question": "What is the purpose of a solid white line on the road?",
+    "options": [
+      "Indicates a pedestrian crossing",
+      "Separates lanes of traffic moving in opposite directions",
+      "Discourages lane changes",
+      "Marks the edge of the roadway"
+    ],
+    "answer": "Discourages lane changes"
+  },
+  {
+    "id": 63,
+    "question": "When must you use your turn signals?",
+    "options": [
+      "Only when turning at intersections",
+      "Only when changing lanes",
+      "Whenever you turn, change lanes, or merge",
+      "Only when other vehicles are nearby"
+    ],
+    "answer": "Whenever you turn, change lanes, or merge"
+  },
+  {
+    "id": 64,
+    "question": "What does a yellow diamond-shaped sign with a black 'T' indicate?",
+    "options": [
+      "No through road",
+      "T-intersection ahead",
+      "Truck route",
+      "Traffic signal ahead"
+    ],
+    "answer": "T-intersection ahead"
+  },
+  {
+    "id": 65,
+    "question": "What is the penalty for not wearing a seatbelt in Ontario?",
+    "options": [
+      "$100 fine and 2 demerit points",
+      "$200 fine and 2 demerit points",
+      "$500 fine and 3 demerit points",
+      "$1000 fine and 4 demerit points"
+    ],
+    "answer": "$200 fine and 2 demerit points"
+  },
+  {
+    "id": 66,
+    "question": "When approaching a stopped emergency vehicle with flashing lights on the roadside, you must:",
+    "options": [
+      "Maintain your speed",
+      "Move over to the next lane if safe and slow down",
+      "Stop immediately",
+      "Honk to alert the emergency vehicle"
+    ],
+    "answer": "Move over to the next lane if safe and slow down"
+  },
+  {
+    "id": 67,
+    "question": "What does a green circle on a white rectangular sign indicate?",
+    "options": [
+      "A permitted action",
+      "A prohibited action",
+      "A warning",
+      "A construction zone"
+    ],
+    "answer": "A permitted action"
+  },
+  {
+    "id": 68,
+    "question": "What should you do if you are involved in a collision?",
+    "options": [
+      "Leave the scene immediately",
+      "Exchange information and report to the police if necessary",
+      "Only report if there are injuries",
+      "Wait for the other driver to report"
+    ],
+    "answer": "Exchange information and report to the police if necessary"
+  },
+  {
+    "id": 69,
+    "question": "What does a flashing green traffic light at an intersection mean?",
+    "options": [
+      "Pedestrians may cross",
+      "You may proceed straight only",
+      "You may turn left, right, or proceed straight",
+      "Stop and wait for the light to turn green"
+    ],
+    "answer": "You may turn left, right, or proceed straight"
+  },
+  {
+    "id": 70,
+    "question": "When driving at night, you should dim your headlights when:",
+    "options": [
+      "Approaching another vehicle within 150 metres",
+      "Driving in the city",
+      "Driving on a well-lit road",
+      "All of the above"
+    ],
+    "answer": "All of the above"
+  },
+  {
+    "id": 71,
+    "question": "What does a red octagonal sign mean?",
+    "options": ["Yield", "Stop", "Do not enter", "No parking"],
+    "answer": "Stop"
+  },
+  {
+    "id": 72,
+    "question": "When is it legal to make a U-turn?",
+    "options": [
+      "On a curve",
+      "On a hill",
+      "At an intersection without signs prohibiting it",
+      "On a railway crossing"
+    ],
+    "answer": "At an intersection without signs prohibiting it"
+  },
+  {
+    "id": 73,
+    "question": "What does a sign with a red circle and a white horizontal line mean?",
+    "options": ["Do not enter", "No stopping", "No parking", "Yield"],
+    "answer": "Do not enter"
+  },
+  {
+    "id": 74,
+    "question": "What should you do when you see a pedestrian with a white cane?",
+    "options": [
+      "Honk to alert them",
+      "Proceed with caution",
+      "Stop and yield the right-of-way",
+      "Speed up to pass quickly"
+    ],
+    "answer": "Stop and yield the right-of-way"
+  }
 ]
