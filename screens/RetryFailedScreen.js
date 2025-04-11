@@ -1,60 +1,71 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import questionsData from '../data/questions.json';
-import { updateScoreboard, recordTestResult, saveFailedQuestions } from '../utils/scoreboardStorage';
+import {
+  getFailedQuestions,
+  saveCompletedQuestions,
+  updateFailedQuestionsAfterRetry
+} from '../utils/scoreboardStorage';
 
 const shuffleArray = (array) => [...array].sort(() => Math.random() - 0.5);
 
-const TestScreen = ({ navigation }) => {
+const RetryFailedScreen = ({ navigation }) => {
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [score, setScore] = useState(0);
   const [quizFinished, setQuizFinished] = useState(false);
-  const [correctQuestions, setCorrectQuestions] = useState([]);
-  const [wrongQuestions, setWrongQuestions] = useState([]);
 
   useEffect(() => {
-    const shuffled = [...questionsData]
-      .sort(() => Math.random() - 0.5)
-      .slice(0, 15)
-      .map(q => ({ ...q, options: shuffleArray(q.options) }));
-    setQuestions(shuffled);
+    const loadFailedQuestions = async () => {
+      const failed = await getFailedQuestions();
+
+      // Deduplicate based on question ID
+      const unique = failed.filter(
+        (q, index, self) => index === self.findIndex(other => other.id === q.id)
+      );
+
+      const randomized = shuffleArray(unique).map(q => ({
+        ...q,
+        options: shuffleArray(q.options)
+      }));
+
+      setQuestions(randomized);
+    };
+
+    loadFailedQuestions();
   }, []);
 
   const handleAnswerSelect = (answer) => {
     const current = questions[currentQuestionIndex];
     const isCorrect = answer === current.answer;
 
+    current.userSelected = answer;
     setSelectedAnswer(answer);
-
-    if (isCorrect) {
-      setScore(prev => prev + 1);
-      setCorrectQuestions(prev => [...prev, current]);
-    } else {
-      setWrongQuestions(prev => [...prev, current]);
-    }
+    if (isCorrect) setScore(prev => prev + 1);
 
     setTimeout(() => {
       if (currentQuestionIndex + 1 < questions.length) {
         setCurrentQuestionIndex(prev => prev + 1);
         setSelectedAnswer(null);
       } else {
-        const finalScore = isCorrect ? score + 1 : score;
         setQuizFinished(true);
 
-        recordTestResult({
-          score: finalScore,
-          total: questions.length,
-          correctQuestions: isCorrect ? [...correctQuestions, current] : correctQuestions,
-          wrongQuestions: !isCorrect ? [...wrongQuestions, current] : wrongQuestions
+        const passed = [];
+        const failedAgain = [];
+
+        questions.forEach(q => {
+          if (q.userSelected === q.answer) {
+            passed.push(q);
+          } else {
+            failedAgain.push(q);
+          }
         });
 
-        saveFailedQuestions(
-          !isCorrect ? [...wrongQuestions, current] : wrongQuestions
-        );
+        if (passed.length > 0) {
+          saveCompletedQuestions(passed);
+        }
 
-        updateScoreboard(finalScore === questions.length);
+        updateFailedQuestionsAfterRetry(failedAgain);
       }
     }, 2000);
   };
@@ -64,25 +75,34 @@ const TestScreen = ({ navigation }) => {
     setSelectedAnswer(null);
     setScore(0);
     setQuizFinished(false);
-    setCorrectQuestions([]);
-    setWrongQuestions([]);
-    const reshuffled = [...questionsData]
-      .sort(() => Math.random() - 0.5)
-      .slice(0, 15)
-      .map(q => ({ ...q, options: shuffleArray(q.options) }));
+    const reshuffled = shuffleArray(questions).map(q => ({
+      ...q,
+      options: shuffleArray(q.options)
+    }));
     setQuestions(reshuffled);
   };
+
+  if (questions.length === 0) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>No failed questions to retry 🎉</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
       {!quizFinished ? (
         <>
-          <Text style={styles.progressText}>Question {currentQuestionIndex + 1}/{questions.length}</Text>
+          <Text style={styles.progressText}>
+            Question {currentQuestionIndex + 1}/{questions.length}
+          </Text>
           <View style={styles.questionBox}>
             <Text style={styles.questionText}>
               {questions[currentQuestionIndex]?.question}
             </Text>
           </View>
+
           {questions[currentQuestionIndex]?.options.map((option, index) => (
             <TouchableOpacity
               key={index}
@@ -105,11 +125,11 @@ const TestScreen = ({ navigation }) => {
         </>
       ) : (
         <View style={styles.resultContainer}>
-          <Text style={styles.resultTitle}>Test Completed!</Text>
+          <Text style={styles.resultTitle}>Retake Complete!</Text>
           <Text style={styles.scoreText}>Score: {score}/{questions.length}</Text>
 
           <TouchableOpacity style={styles.restartButton} onPress={restartQuiz}>
-            <Text style={styles.buttonText}>Try Again</Text>
+            <Text style={styles.buttonText}>Retry Again</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.homeButton} onPress={() => navigation.navigate('Home')}>
@@ -143,9 +163,22 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
   optionText: { fontSize: 16, color: '#2c3e50' },
-  resultContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  resultTitle: { fontSize: 24, fontWeight: 'bold', color: '#2c3e50', marginBottom: 20 },
-  scoreText: { fontSize: 20, color: '#2c3e50', marginBottom: 30 },
+  resultContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  resultTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#2c3e50',
+    marginBottom: 20
+  },
+  scoreText: {
+    fontSize: 20,
+    color: '#2c3e50',
+    marginBottom: 30
+  },
   restartButton: {
     backgroundColor: '#3498db',
     padding: 15,
@@ -164,7 +197,12 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
     fontWeight: 'bold'
+  },
+  title: {
+    fontSize: 20,
+    color: '#2c3e50',
+    textAlign: 'center'
   }
 });
 
-export default TestScreen;
+export default RetryFailedScreen;

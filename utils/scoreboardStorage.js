@@ -1,34 +1,143 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { db } from './firebase';
+import {
+  collection,
+  doc,
+  addDoc,
+  getDoc,
+  getDocs,
+  setDoc,
+  deleteDoc,
+  serverTimestamp,
+  query,
+  orderBy
+} from 'firebase/firestore';
 
-const SCOREBOARD_KEY = 'scoreboard';
+const SCOREBOARD_DOC = 'scoreboard/stats';
 
 export const getScoreboard = async () => {
-    try {
-        const scoreboard = await AsyncStorage.getItem(SCOREBOARD_KEY);
-        return scoreboard ? JSON.parse(scoreboard) : { attempts: 0, wins: 0 };
-    } catch (error) {
-        console.error('Error loading scoreboard:', error);
-        return { attempts: 0, wins: 0 };
-    }
+  try {
+    const docRef = doc(db, SCOREBOARD_DOC);
+    const docSnap = await getDoc(docRef);
+    return docSnap.exists() ? docSnap.data() : { attempts: 0, wins: 0, losses: 0 };
+  } catch (error) {
+    console.error('Error fetching scoreboard:', error);
+    return { attempts: 0, wins: 0, losses: 0 };
+  }
 };
 
 export const updateScoreboard = async (isWin) => {
-    try {
-        const scoreboard = await getScoreboard();
-        scoreboard.attempts += 1;
-        if (isWin) {
-            scoreboard.wins += 1;
-        }
-        await AsyncStorage.setItem(SCOREBOARD_KEY, JSON.stringify(scoreboard));
-    } catch (error) {
-        console.error('Error updating scoreboard:', error);
-    }
+  try {
+    const data = await getScoreboard();
+    const newData = {
+      attempts: (data.attempts || 0) + 1,
+      wins: (data.wins || 0) + (isWin ? 1 : 0),
+      losses: (data.losses || 0) + (!isWin ? 1 : 0)
+    };
+    await setDoc(doc(db, SCOREBOARD_DOC), newData);
+  } catch (error) {
+    console.error('Error updating scoreboard:', error);
+  }
 };
 
 export const resetScoreboard = async () => {
-    try {
-        await AsyncStorage.removeItem(SCOREBOARD_KEY);
-    } catch (error) {
-        console.error('Error resetting scoreboard:', error);
-    }
+  try {
+    await setDoc(doc(db, SCOREBOARD_DOC), {
+      attempts: 0,
+      wins: 0,
+      losses: 0
+    });
+  } catch (error) {
+    console.error('Error resetting scoreboard:', error);
+  }
+};
+
+export const recordTestResult = async ({ score, total, correctQuestions, wrongQuestions }) => {
+  try {
+    await addDoc(collection(db, 'tests'), {
+      timestamp: serverTimestamp(),
+      score,
+      total,
+      correctCount: correctQuestions.length,
+      wrongCount: wrongQuestions.length,
+      correctQuestions,
+      wrongQuestions
+    });
+  } catch (error) {
+    console.error('🔥 Error recording test:', error);
+  }
+};
+
+export const getTestHistory = async () => {
+  try {
+    const q = query(collection(db, 'tests'), orderBy('timestamp', 'desc'));
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  } catch (error) {
+    console.error('Error loading test history:', error);
+    return [];
+  }
+};
+
+export const clearTestHistory = async () => {
+  try {
+    const snapshot = await getDocs(collection(db, 'tests'));
+    const batchDeletions = snapshot.docs.map(d => deleteDoc(doc(db, 'tests', d.id)));
+    await Promise.all(batchDeletions);
+  } catch (error) {
+    console.error('Error clearing test history:', error);
+  }
+};
+
+// ✅ Save failed questions (merged without duplicates)
+export const saveFailedQuestions = async (newFails) => {
+  try {
+    const docRef = doc(db, 'failed', 'latest');
+    const snapshot = await getDoc(docRef);
+    let currentFails = snapshot.exists() ? snapshot.data().questions || [] : [];
+
+    // Merge unique
+    const merged = [...currentFails];
+    newFails.forEach(q => {
+      if (!merged.some(existing => existing.id === q.id)) {
+        merged.push(q);
+      }
+    });
+
+    await setDoc(docRef, { questions: merged });
+    console.log('❌ Failed questions merged and saved.');
+  } catch (error) {
+    console.error('Error saving failed questions:', error);
+  }
+};
+
+// ✅ Get failed questions
+export const getFailedQuestions = async () => {
+  try {
+    const docRef = doc(db, 'failed', 'latest');
+    const snapshot = await getDoc(docRef);
+    return snapshot.exists() ? snapshot.data().questions || [] : [];
+  } catch (error) {
+    console.error('Error loading failed questions:', error);
+    return [];
+  }
+};
+
+// ✅ Save completed retry questions
+export const saveCompletedQuestions = async (questions) => {
+  try {
+    await setDoc(doc(db, 'completed', 'latest'), { questions });
+    console.log('✅ Completed questions saved to Firestore');
+  } catch (error) {
+    console.error('Error saving completed questions:', error);
+  }
+};
+
+// ✅ Update remaining failed questions
+export const updateFailedQuestionsAfterRetry = async (remainingFailed) => {
+  try {
+    await setDoc(doc(db, 'failed', 'latest'), { questions: remainingFailed });
+    console.log('🔄 Updated failed questions after retry');
+  } catch (error) {
+    console.error('Error updating failed questions after retry:', error);
+  }
 };
