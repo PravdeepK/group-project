@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Alert } from 'react-native';
 import { db } from '../utils/firebase';
-import { doc, onSnapshot } from 'firebase/firestore'; // 👈 real-time listener
-import { resetScoreboard } from '../utils/scoreboardStorage';
+import { doc, onSnapshot } from 'firebase/firestore';
+import { resetScoreboard, clearTestHistory } from '../utils/scoreboardStorage';
 
 const ScoreboardScreen = () => {
-  const [scoreboard, setScoreboard] = useState({ attempts: 0, wins: 0 });
+  const [scoreboard, setScoreboard] = useState({ attempts: 0, wins: 0, losses: 0 });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -15,24 +15,36 @@ const ScoreboardScreen = () => {
       if (docSnap.exists()) {
         setScoreboard(docSnap.data());
       } else {
-        setScoreboard({ attempts: 0, wins: 0 });
+        setScoreboard({ attempts: 0, wins: 0, losses: 0 });
       }
       setLoading(false);
     }, (error) => {
-      console.error('Error with Firestore listener:', error);
+      console.error('Error loading scoreboard:', error);
       setLoading(false);
     });
 
-    return () => unsubscribe(); // 🔁 Clean up the listener on unmount
+    return () => unsubscribe();
   }, []);
 
-  const handleReset = async () => {
+  const handleResetConfirmed = async () => {
     try {
       await resetScoreboard();
-      // No need to manually update state — listener handles it
+      await clearTestHistory();
+      setScoreboard({ attempts: 0, wins: 0, losses: 0 });
     } catch (error) {
-      console.error('Failed to reset scoreboard:', error);
+      console.error('Failed to reset stats and history:', error);
     }
+  };
+
+  const handleReset = () => {
+    Alert.alert(
+      'Reset Stats?',
+      'This will erase all test attempts and scoreboard stats permanently.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Reset', style: 'destructive', onPress: handleResetConfirmed }
+      ]
+    );
   };
 
   if (loading) {
@@ -42,6 +54,10 @@ const ScoreboardScreen = () => {
       </View>
     );
   }
+
+  const winRate = scoreboard.attempts > 0
+    ? ((scoreboard.wins / scoreboard.attempts) * 100).toFixed(1) + '%'
+    : '0%';
 
   return (
     <View style={styles.container}>
@@ -57,12 +73,12 @@ const ScoreboardScreen = () => {
           <Text style={styles.statValue}>{scoreboard.wins}</Text>
         </View>
         <View style={styles.statRow}>
+          <Text style={styles.statLabel}>Losses:</Text>
+          <Text style={styles.statValue}>{scoreboard.losses}</Text>
+        </View>
+        <View style={styles.statRow}>
           <Text style={styles.statLabel}>Win Rate:</Text>
-          <Text style={styles.statValue}>
-            {scoreboard.attempts > 0
-              ? ((scoreboard.wins / scoreboard.attempts) * 100).toFixed(1) + '%'
-              : '0%'}
-          </Text>
+          <Text style={styles.statValue}>{winRate}</Text>
         </View>
       </View>
 
@@ -85,7 +101,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#2c3e50',
     marginBottom: 30,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   statsBox: {
     backgroundColor: 'white',
@@ -96,35 +112,35 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 2
+    elevation: 2,
   },
   statRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingVertical: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#ecf0f1'
+    borderBottomColor: '#ecf0f1',
   },
   statLabel: {
     fontSize: 18,
-    color: '#7f8c8d'
+    color: '#7f8c8d',
   },
   statValue: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#2c3e50'
+    color: '#2c3e50',
   },
   resetButton: {
     backgroundColor: '#e74c3c',
     padding: 15,
     borderRadius: 8,
-    marginTop: 20
+    marginTop: 20,
   },
   resetButtonText: {
     color: 'white',
     textAlign: 'center',
-    fontWeight: 'bold'
-  }
+    fontWeight: 'bold',
+  },
 });
 
 export default ScoreboardScreen;

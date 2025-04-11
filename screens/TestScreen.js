@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import questionsData from '../data/questions.json';
-import { updateScoreboard, recordTestResult } from '../utils/scoreboardStorage';
+import { updateScoreboard, recordTestResult, saveFailedQuestions } from '../utils/scoreboardStorage';
+
+const shuffleArray = (array) => [...array].sort(() => Math.random() - 0.5);
 
 const TestScreen = ({ navigation }) => {
   const [questions, setQuestions] = useState([]);
@@ -13,22 +15,24 @@ const TestScreen = ({ navigation }) => {
   const [wrongQuestions, setWrongQuestions] = useState([]);
 
   useEffect(() => {
-    const shuffled = [...questionsData].sort(() => Math.random() - 0.5).slice(0, 15);
+    const shuffled = [...questionsData]
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 15)
+      .map((q) => ({ ...q, options: shuffleArray(q.options) }));
     setQuestions(shuffled);
   }, []);
 
   const handleAnswerSelect = (answer) => {
-    const currentQuestion = questions[currentQuestionIndex];
-    const correctAnswer = currentQuestion.answer;
-    const isCorrect = answer === correctAnswer;
+    const current = questions[currentQuestionIndex];
+    const isCorrect = answer === current.answer;
 
     setSelectedAnswer(answer);
 
     if (isCorrect) {
       setScore(prev => prev + 1);
-      setCorrectQuestions(prev => [...prev, currentQuestion]);
+      setCorrectQuestions(prev => [...prev, current]);
     } else {
-      setWrongQuestions(prev => [...prev, currentQuestion]);
+      setWrongQuestions(prev => [...prev, current]);
     }
 
     setTimeout(() => {
@@ -39,13 +43,16 @@ const TestScreen = ({ navigation }) => {
         const finalScore = isCorrect ? score + 1 : score;
         setQuizFinished(true);
 
-        // ✅ Store the result in Firestore
         recordTestResult({
           score: finalScore,
           total: questions.length,
-          correctQuestions: isCorrect ? [...correctQuestions, currentQuestion] : correctQuestions,
-          wrongQuestions: !isCorrect ? [...wrongQuestions, currentQuestion] : wrongQuestions
+          correctQuestions: isCorrect ? [...correctQuestions, current] : correctQuestions,
+          wrongQuestions: !isCorrect ? [...wrongQuestions, current] : wrongQuestions
         });
+
+        saveFailedQuestions(
+          !isCorrect ? [...wrongQuestions, current] : wrongQuestions
+        );
 
         updateScoreboard(finalScore === questions.length);
       }
@@ -59,7 +66,10 @@ const TestScreen = ({ navigation }) => {
     setQuizFinished(false);
     setCorrectQuestions([]);
     setWrongQuestions([]);
-    const reshuffled = [...questionsData].sort(() => Math.random() - 0.5).slice(0, 15);
+    const reshuffled = [...questionsData]
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 15)
+      .map((q) => ({ ...q, options: shuffleArray(q.options) }));
     setQuestions(reshuffled);
   };
 
@@ -67,15 +77,12 @@ const TestScreen = ({ navigation }) => {
     <View style={styles.container}>
       {!quizFinished ? (
         <>
-          <Text style={styles.progressText}>
-            Question {currentQuestionIndex + 1}/{questions.length}
-          </Text>
+          <Text style={styles.progressText}>Question {currentQuestionIndex + 1}/{questions.length}</Text>
           <View style={styles.questionBox}>
             <Text style={styles.questionText}>
               {questions[currentQuestionIndex]?.question}
             </Text>
           </View>
-
           {questions[currentQuestionIndex]?.options.map((option, index) => (
             <TouchableOpacity
               key={index}
@@ -110,69 +117,17 @@ const TestScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: '#f0f2f5'
-  },
-  progressText: {
-    color: '#7f8c8d',
-    marginBottom: 20,
-    textAlign: 'center'
-  },
-  questionBox: {
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 10,
-    marginBottom: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2
-  },
-  questionText: {
-    fontSize: 18,
-    color: '#2c3e50',
-    lineHeight: 24
-  },
-  optionButton: {
-    backgroundColor: '#ecf0f1',
-    padding: 15,
-    borderRadius: 8,
-    marginBottom: 10
-  },
-  optionText: {
-    fontSize: 16,
-    color: '#2c3e50'
-  },
-  resultContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  resultTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#2c3e50',
-    marginBottom: 20
-  },
-  scoreText: {
-    fontSize: 20,
-    color: '#2c3e50',
-    marginBottom: 30
-  },
-  restartButton: {
-    backgroundColor: '#3498db',
-    padding: 15,
-    borderRadius: 8,
-    width: '80%'
-  },
-  buttonText: {
-    color: 'white',
-    textAlign: 'center',
-    fontWeight: 'bold'
-  }
+  container: { flex: 1, padding: 20, backgroundColor: '#f0f2f5' },
+  progressText: { color: '#7f8c8d', marginBottom: 20, textAlign: 'center' },
+  questionBox: { backgroundColor: 'white', padding: 20, borderRadius: 10, marginBottom: 20 },
+  questionText: { fontSize: 18, color: '#2c3e50', lineHeight: 24 },
+  optionButton: { backgroundColor: '#ecf0f1', padding: 15, borderRadius: 8, marginBottom: 10 },
+  optionText: { fontSize: 16, color: '#2c3e50' },
+  resultContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  resultTitle: { fontSize: 24, fontWeight: 'bold', color: '#2c3e50', marginBottom: 20 },
+  scoreText: { fontSize: 20, color: '#2c3e50', marginBottom: 30 },
+  restartButton: { backgroundColor: '#3498db', padding: 15, borderRadius: 8, width: '80%' },
+  buttonText: { color: 'white', textAlign: 'center', fontWeight: 'bold' }
 });
 
 export default TestScreen;

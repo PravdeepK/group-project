@@ -5,7 +5,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './screens/HomeScreen';
 import ScoreboardScreen from './screens/ScoreboardScreen';
 import TestScreen from './screens/TestScreen';
-import TestHistoryScreen from './screens/TestHistoryScreen'; // ✅ New screen for test history
+import TestHistoryScreen from './screens/TestHistoryScreen';
+import RetryFailedScreen from './screens/RetryFailedScreen';
 
 const Stack = createStackNavigator();
 
@@ -17,6 +18,7 @@ const App = () => {
         <Stack.Screen name="Scoreboard" component={ScoreboardScreen} />
         <Stack.Screen name="Test" component={TestScreen} />
         <Stack.Screen name="TestHistory" component={TestHistoryScreen} />
+        <Stack.Screen name="RetryFailed" component={RetryFailedScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

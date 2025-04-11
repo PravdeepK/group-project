@@ -1,16 +1,30 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 
 const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>G2 Driving Test</Text>
+      <Image
+        source={{ uri: 'https://drivingexam.ca/wp-content/uploads/2023/12/DrivingExam-Logo.png' }}
+        style={styles.logo}
+        resizeMode="contain"
+      />
+
+      <Text style={styles.title}>G1 Driving Test</Text>
+
       <View style={styles.buttonContainer}>
         <TouchableOpacity 
           style={styles.primaryButton}
           onPress={() => navigation.navigate('Test')}
         >
           <Text style={styles.buttonText}>Start Test</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity 
+          style={styles.primaryButton}
+          onPress={() => navigation.navigate('RetryFailed')}
+        >
+          <Text style={styles.buttonText}>Retake Failed Questions</Text>
         </TouchableOpacity>
 
         <TouchableOpacity 
@@ -39,11 +53,23 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f2f5',
     padding: 20
   },
+  logo: {
+    width: 600,
+    height: 175,
+    marginBottom: 25,
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 5
+  },
   title: {
     fontSize: 28,
     fontWeight: 'bold',
     color: '#2c3e50',
-    marginBottom: 40
+    marginBottom: 40,
+    textAlign: 'center'
   },
   buttonContainer: {
     width: '100%',
