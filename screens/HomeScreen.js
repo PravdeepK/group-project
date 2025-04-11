@@ -12,11 +12,19 @@ const HomeScreen = ({ navigation }) => {
         >
           <Text style={styles.buttonText}>Start Test</Text>
         </TouchableOpacity>
+
         <TouchableOpacity 
           style={styles.secondaryButton}
           onPress={() => navigation.navigate('Scoreboard')}
         >
           <Text style={styles.secondaryButtonText}>Scoreboard</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity 
+          style={styles.secondaryButton}
+          onPress={() => navigation.navigate('TestHistory')}
+        >
+          <Text style={styles.secondaryButtonText}>View Test History</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -28,7 +36,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f0f2f5', // Light gray background
+    backgroundColor: '#f0f2f5',
     padding: 20
   },
   title: {
@@ -54,7 +62,8 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#3498db',
     borderRadius: 8,
-    width: '80%'
+    width: '80%',
+    marginTop: 10
   },
   buttonText: {
     color: 'white',
