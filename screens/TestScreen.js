@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import questionsData from '../data/questions.json';
-import { updateScoreboard, recordTestResult, saveFailedQuestions } from '../utils/scoreboardStorage';
+import {
+  updateScoreboard,
+  recordTestResult,
+  saveFailedQuestions,
+  updateNotCompletedAfterAttempt
+} from '../utils/scoreboardStorage';
 
 const shuffleArray = (array) => [...array].sort(() => Math.random() - 0.5);
 
@@ -14,8 +19,6 @@ const TestScreen = ({ navigation }) => {
   const [correctQuestions, setCorrectQuestions] = useState([]);
   const [wrongQuestions, setWrongQuestions] = useState([]);
 
-  // Shuffle and randomize questions and options
-  // Select 15 random questions from the dataset
   useEffect(() => {
     const shuffled = [...questionsData]
       .sort(() => Math.random() - 0.5)
@@ -24,14 +27,12 @@ const TestScreen = ({ navigation }) => {
     setQuestions(shuffled);
   }, []);
 
-  // Handle answer selection
-  const handleAnswerSelect = (answer) => {
+  const handleAnswerSelect = async (answer) => {
     const current = questions[currentQuestionIndex];
     const isCorrect = answer === current.answer;
 
     setSelectedAnswer(answer);
 
-    // Update the current question with the user's selected answer
     if (isCorrect) {
       setScore(prev => prev + 1);
       setCorrectQuestions(prev => [...prev, current]);
@@ -39,7 +40,7 @@ const TestScreen = ({ navigation }) => {
       setWrongQuestions(prev => [...prev, current]);
     }
 
-    setTimeout(() => {
+    setTimeout(async () => {
       if (currentQuestionIndex + 1 < questions.length) {
         setCurrentQuestionIndex(prev => prev + 1);
         setSelectedAnswer(null);
@@ -47,25 +48,25 @@ const TestScreen = ({ navigation }) => {
         const finalScore = isCorrect ? score + 1 : score;
         setQuizFinished(true);
 
-        // Record the test result
-        recordTestResult({
+        const completed = [...correctQuestions, ...wrongQuestions];
+        if (!isCorrect) completed.push(current);
+
+        await recordTestResult({
           score: finalScore,
           total: questions.length,
-          correctQuestions: isCorrect ? [...correctQuestions, current] : correctQuestions,
-          wrongQuestions: !isCorrect ? [...wrongQuestions, current] : wrongQuestions
+          correctQuestions,
+          wrongQuestions
         });
 
-        // Save failed questions for retry
-        saveFailedQuestions(
-          !isCorrect ? [...wrongQuestions, current] : wrongQuestions
-        );
+        await saveFailedQuestions([...wrongQuestions, ...(isCorrect ? [] : [current])]);
+        await updateScoreboard(finalScore === questions.length);
 
-        updateScoreboard(finalScore === questions.length);
+        // ✅ Remove attempted questions from notCompleted
+        await updateNotCompletedAfterAttempt(completed);
       }
     }, 2000);
   };
 
-  // Restart the quiz
   const restartQuiz = () => {
     setCurrentQuestionIndex(0);
     setSelectedAnswer(null);

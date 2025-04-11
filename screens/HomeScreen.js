@@ -28,6 +28,13 @@ const HomeScreen = ({ navigation }) => {
         </TouchableOpacity>
 
         <TouchableOpacity 
+          style={styles.primaryButton}
+          onPress={() => navigation.navigate('TryNewQuestions')}
+        >
+          <Text style={styles.buttonText}>Try New Questions</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity 
           style={styles.secondaryButton}
           onPress={() => navigation.navigate('Scoreboard')}
         >
