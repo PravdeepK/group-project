@@ -1,6 +1,9 @@
 import { initializeApp, getApps } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 
+
+//everything important like api keys and other sensitive data is hidden 
+// in the .env file thats hidden in the .gitignore
 import {
   FIREBASE_API_KEY,
   FIREBASE_AUTH_DOMAIN,
@@ -19,6 +22,8 @@ const firebaseConfig = {
   appId: FIREBASE_APP_ID
 };
 
+// Initialize Firebase
+// also checks if there are already initialized apps
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 
 export const db = getFirestore(app); 

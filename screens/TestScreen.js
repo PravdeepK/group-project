@@ -8,8 +8,10 @@ import {
   updateNotCompletedAfterAttempt
 } from '../utils/scoreboardStorage';
 
+//randomize the array of questions and  options for the test
 const shuffleArray = (array) => [...array].sort(() => Math.random() - 0.5);
 
+// TestScreen component
 const TestScreen = ({ navigation }) => {
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -19,6 +21,8 @@ const TestScreen = ({ navigation }) => {
   const [correctQuestions, setCorrectQuestions] = useState([]);
   const [wrongQuestions, setWrongQuestions] = useState([]);
 
+  // Shuffle and select 15 questions from the data
+  // and randomize the options for each question
   useEffect(() => {
     const shuffled = [...questionsData]
       .sort(() => Math.random() - 0.5)
@@ -27,12 +31,17 @@ const TestScreen = ({ navigation }) => {
     setQuestions(shuffled);
   }, []);
 
+  // Handle answer selection
+  // Check if the selected answer is correct
+  // Update score and correct/wrong questions
+  // After a delay, move to the next question or finish the quiz
   const handleAnswerSelect = async (answer) => {
     const current = questions[currentQuestionIndex];
     const isCorrect = answer === current.answer;
 
     setSelectedAnswer(answer);
 
+    // Update the current question with the user's selected answer and saves it if its wrong or right
     if (isCorrect) {
       setScore(prev => prev + 1);
       setCorrectQuestions(prev => [...prev, current]);
@@ -40,11 +49,14 @@ const TestScreen = ({ navigation }) => {
       setWrongQuestions(prev => [...prev, current]);
     }
 
+    // Simulate a delay for the user to see the answer
     setTimeout(async () => {
       if (currentQuestionIndex + 1 < questions.length) {
         setCurrentQuestionIndex(prev => prev + 1);
         setSelectedAnswer(null);
       } else {
+        // Quiz finished
+        // Save the test result and update the scoreboard
         const finalScore = isCorrect ? score + 1 : score;
         setQuizFinished(true);
 
@@ -61,12 +73,13 @@ const TestScreen = ({ navigation }) => {
         await saveFailedQuestions([...wrongQuestions, ...(isCorrect ? [] : [current])]);
         await updateScoreboard(finalScore === questions.length);
 
-        // ✅ Remove attempted questions from notCompleted
+        // removes attempted questions from notCompleted
         await updateNotCompletedAfterAttempt(completed);
       }
     }, 2000);
   };
 
+  // Restart the quiz
   const restartQuiz = () => {
     setCurrentQuestionIndex(0);
     setSelectedAnswer(null);
@@ -82,6 +95,7 @@ const TestScreen = ({ navigation }) => {
   };
 
   return (
+    // Main container
     <View style={styles.container}>
       {!quizFinished ? (
         <>
@@ -112,6 +126,7 @@ const TestScreen = ({ navigation }) => {
           ))}
         </>
       ) : (
+        // Quiz result screen
         <View style={styles.resultContainer}>
           <Text style={styles.resultTitle}>Test Completed!</Text>
           <Text style={styles.scoreText}>Score: {score}/{questions.length}</Text>

@@ -21,14 +21,14 @@ const TestHistoryScreen = () => {
     loadTests();
   }, []);
 
-  // Format the timestamp to a readable date
+  // timestamp as a readable date
   const getFormattedDate = (timestamp) => {
     if (!timestamp || !timestamp.toDate) return '';
     const date = timestamp.toDate();
     return date.toLocaleString();
   };
 
-  // Render each test result
+  // show each test result
   const renderTest = ({ item }) => (
     <View style={styles.testCard}>
       <Text style={styles.date}>{getFormattedDate(item.timestamp)}</Text>

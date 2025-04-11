@@ -7,6 +7,8 @@ import {
   saveFailedQuestions
 } from "../utils/scoreboardStorage";
 
+// again same as test screen but only with new questions
+
 const shuffleArray = (array) => [...array].sort(() => Math.random() - 0.5);
 
 const TryNewQuestionsScreen = ({ navigation }) => {
@@ -16,6 +18,7 @@ const TryNewQuestionsScreen = ({ navigation }) => {
   const [score, setScore] = useState(0);
   const [quizFinished, setQuizFinished] = useState(false);
 
+    // Load questions from the storage
   useEffect(() => {
     const loadQuestions = async () => {
       const notCompleted = await getNotCompletedQuestions();
@@ -59,6 +62,7 @@ const TryNewQuestionsScreen = ({ navigation }) => {
           }
         });
 
+        // Save the results
         saveCompletedQuestions(passed);
         saveFailedQuestions(failed);
         updateNotCompletedAfterAttempt([...passed, ...failed]);

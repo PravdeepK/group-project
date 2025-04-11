@@ -13,8 +13,11 @@ import {
   orderBy
 } from 'firebase/firestore';
 
+// Constants
 const SCOREBOARD_DOC = 'scoreboard/stats';
 
+//Fetch scoreboard stats from Firestore
+//If missing, return default values
 export const getScoreboard = async () => {
   try {
     const docRef = doc(db, SCOREBOARD_DOC);
@@ -26,6 +29,8 @@ export const getScoreboard = async () => {
   }
 };
 
+// Update scoreboard stats in Firestore
+// Increment attempts, wins, and losses based on the game result
 export const updateScoreboard = async (isWin) => {
   try {
     const data = await getScoreboard();
@@ -40,6 +45,9 @@ export const updateScoreboard = async (isWin) => {
   }
 };
 
+// Reset scoreboard stats in Firestore
+// Set attempts, wins, and losses to 0
+// only happens when user presses the reset button in the scoreboard screen
 export const resetScoreboard = async () => {
   try {
     await setDoc(doc(db, SCOREBOARD_DOC), {
@@ -52,6 +60,9 @@ export const resetScoreboard = async () => {
   }
 };
 
+// Save test results to Firestore
+// Add a new document to the 'tests' collection
+// with the test result data
 export const recordTestResult = async ({ score, total, correctQuestions, wrongQuestions }) => {
   try {
     await addDoc(collection(db, 'tests'), {
@@ -68,6 +79,8 @@ export const recordTestResult = async ({ score, total, correctQuestions, wrongQu
   }
 };
 
+// Fetch test history from Firestore
+// Get all documents from the 'tests' collection
 export const getTestHistory = async () => {
   try {
     const q = query(collection(db, 'tests'), orderBy('timestamp', 'desc'));
@@ -79,6 +92,9 @@ export const getTestHistory = async () => {
   }
 };
 
+// Clear test history from Firestore
+// Delete all documents from the 'tests' collection
+// only happens when button is pressed 
 export const clearTestHistory = async () => {
   try {
     const snapshot = await getDocs(collection(db, 'tests'));
@@ -89,6 +105,11 @@ export const clearTestHistory = async () => {
   }
 };
 
+// Save failed questions to Firestore
+// Add new failed questions to the 'failed' collection
+// If the document doesn't exist, create it
+// If it exists, merge the new questions with the existing ones
+// also removes duplicates
 export const saveFailedQuestions = async (newFails) => {
   try {
     const docRef = doc(db, 'failed', 'latest');
@@ -108,6 +129,8 @@ export const saveFailedQuestions = async (newFails) => {
   }
 };
 
+// Fetch failed questions from Firestore
+// Get the latest failed questions from the 'failed' collection
 export const getFailedQuestions = async () => {
   try {
     const docRef = doc(db, 'failed', 'latest');
@@ -119,6 +142,9 @@ export const getFailedQuestions = async () => {
   }
 };
 
+// Save completed questions to Firestore
+// Add new completed questions to the 'completed' collection
+// If the document doesn't exist, create it
 export const saveCompletedQuestions = async (questions) => {
   try {
     await setDoc(doc(db, 'completed', 'latest'), { questions });
@@ -127,6 +153,8 @@ export const saveCompletedQuestions = async (questions) => {
   }
 };
 
+// Fetch completed questions from Firestore
+// Get the latest completed questions from the 'completed' collection
 export const updateFailedQuestionsAfterRetry = async (remainingFailed) => {
   try {
     await setDoc(doc(db, 'failed', 'latest'), { questions: remainingFailed });
@@ -135,6 +163,8 @@ export const updateFailedQuestionsAfterRetry = async (remainingFailed) => {
   }
 };
 
+// Save not completed questions to Firestore
+// Add new not completed questions to the 'notCompleted' collection
 export const saveNotCompletedQuestions = async (questions) => {
   try {
     await setDoc(doc(db, 'notCompleted', 'latest'), { questions });
@@ -143,6 +173,8 @@ export const saveNotCompletedQuestions = async (questions) => {
   }
 };
 
+// Fetch not completed questions from Firestore
+// Get the latest not completed questions from the 'notCompleted' collection
 export const getNotCompletedQuestions = async () => {
   try {
     const docRef = doc(db, 'notCompleted', 'latest');
@@ -154,6 +186,8 @@ export const getNotCompletedQuestions = async () => {
   }
 };
 
+// Update not completed questions after an attempt
+// Remove attempted questions from the not completed list
 export const updateNotCompletedAfterAttempt = async (attemptedQuestions) => {
   try {
     const all = await getNotCompletedQuestions();
@@ -164,7 +198,7 @@ export const updateNotCompletedAfterAttempt = async (attemptedQuestions) => {
   }
 };
 
-// ✅ Reset all questions to not completed
+// reset all questions to not completed
 export const resetNotCompletedQuestions = async () => {
   try {
     await setDoc(doc(db, 'notCompleted', 'latest'), { questions });

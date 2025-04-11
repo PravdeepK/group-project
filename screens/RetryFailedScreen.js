@@ -6,6 +6,8 @@ import {
   updateFailedQuestionsAfterRetry,
 } from "../utils/scoreboardStorage";
 
+
+/* same as test screen but only works for questions that youve failed */
 const shuffleArray = (array) => [...array].sort(() => Math.random() - 0.5);
 
 const RetryFailedScreen = ({ navigation }) => {
@@ -16,15 +18,16 @@ const RetryFailedScreen = ({ navigation }) => {
   const [quizFinished, setQuizFinished] = useState(false);
 
   useEffect(() => {
+    // Load failed questions from the storage
     const loadFailedQuestions = async () => {
       const failed = await getFailedQuestions();
 
-      // If no failed questions, return early
+      // if theres no failed questions, return early
       const unique = failed.filter(
         (q, index, self) =>
           index === self.findIndex((other) => other.id === q.id)
       );
-      // Shuffle and randomize options
+      //shuffle and randomize options
       const randomized = shuffleArray(unique).map((q) => ({
         ...q,
         options: shuffleArray(q.options),
