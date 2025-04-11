@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Button } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import questionsData from '../data/questions.json';
 import { updateScoreboard } from '../utils/scoreboardStorage';
 
@@ -11,9 +11,12 @@ const TestScreen = ({ navigation }) => {
     const [quizFinished, setQuizFinished] = useState(false);
 
     useEffect(() => {
-        const shuffledQuestions = [...questionsData].sort(() => Math.random() - 0.5);
-        setQuestions(shuffledQuestions);
-    }, []);
+      const shuffledQuestions = [...questionsData]
+          .sort(() => Math.random() - 0.5)
+          .slice(0, 15);
+      setQuestions(shuffledQuestions);
+  }, []);
+  
 
     const handleAnswerSelect = (answer) => {
         setSelectedAnswer(answer);
@@ -43,63 +46,68 @@ const TestScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-          {!quizFinished ? (
-            <>
-              <Text style={styles.progressText}>
-                Question {currentQuestionIndex + 1}/{questions.length}
-              </Text>
-              <View style={styles.questionBox}>
-                <Text style={styles.questionText}>{questions[currentQuestionIndex]?.question}</Text>
-              </View>
-    
-              {questions[currentQuestionIndex]?.options.map((option, index) => (
-                <TouchableOpacity
-                  key={index}
-                  style={[
-                    styles.optionButton,
-                    selectedAnswer === option && {
-                      backgroundColor: option === questions[currentQuestionIndex].answer 
-                        ? '#27ae60' // Green if correct
-                        : '#e74c3c' // Red if wrong
-                    }
-                  ]}
-                  onPress={() => handleAnswerSelect(option)}
-                  disabled={selectedAnswer !== null}
-                >
-                  <Text style={styles.optionText}>{option}</Text>
-                </TouchableOpacity>
-              ))}
-            </>
-          ) : (
-            <View style={styles.resultContainer}>
-              <Text style={styles.resultTitle}>Test Completed!</Text>
-              <Text style={styles.scoreText}>
-                Score: {score}/{questions.length}
-              </Text>
-              <TouchableOpacity 
-                style={styles.restartButton}
-                onPress={restartQuiz}
-              >
-                <Text style={styles.buttonText}>Try Again</Text>
-              </TouchableOpacity>
-            </View>
-          )}
+            {!quizFinished ? (
+                <>
+                    <Text style={styles.progressText}>
+                        Question {currentQuestionIndex + 1}/{questions.length}
+                    </Text>
+                    <View style={styles.questionBox}>
+                        <Text style={styles.questionText}>
+                            {questions[currentQuestionIndex]?.question}
+                        </Text>
+                    </View>
+
+                    {questions[currentQuestionIndex]?.options.map((option, index) => (
+                        <TouchableOpacity
+                            key={index}
+                            style={[
+                                styles.optionButton,
+                                selectedAnswer !== null &&
+                                option === questions[currentQuestionIndex].answer && {
+                                    backgroundColor: '#27ae60' // Green for correct answer
+                                },
+                                selectedAnswer === option &&
+                                selectedAnswer !== questions[currentQuestionIndex].answer && {
+                                    backgroundColor: '#e74c3c' // Red for wrong selected answer
+                                }
+                            ]}
+                            onPress={() => handleAnswerSelect(option)}
+                            disabled={selectedAnswer !== null}
+                        >
+                            <Text style={styles.optionText}>{option}</Text>
+                        </TouchableOpacity>
+                    ))}
+                </>
+            ) : (
+                <View style={styles.resultContainer}>
+                    <Text style={styles.resultTitle}>Test Completed!</Text>
+                    <Text style={styles.scoreText}>
+                        Score: {score}/{questions.length}
+                    </Text>
+                    <TouchableOpacity
+                        style={styles.restartButton}
+                        onPress={restartQuiz}
+                    >
+                        <Text style={styles.buttonText}>Try Again</Text>
+                    </TouchableOpacity>
+                </View>
+            )}
         </View>
-      );
-    };
-    
-    const styles = StyleSheet.create({
-      container: {
+    );
+};
+
+const styles = StyleSheet.create({
+    container: {
         flex: 1,
         padding: 20,
         backgroundColor: '#f0f2f5'
-      },
-      progressText: {
+    },
+    progressText: {
         color: '#7f8c8d',
         marginBottom: 20,
         textAlign: 'center'
-      },
-      questionBox: {
+    },
+    questionBox: {
         backgroundColor: 'white',
         padding: 20,
         borderRadius: 10,
@@ -109,49 +117,49 @@ const TestScreen = ({ navigation }) => {
         shadowOpacity: 0.1,
         shadowRadius: 4,
         elevation: 2
-      },
-      questionText: {
+    },
+    questionText: {
         fontSize: 18,
         color: '#2c3e50',
         lineHeight: 24
-      },
-      optionButton: {
+    },
+    optionButton: {
         backgroundColor: '#ecf0f1',
         padding: 15,
         borderRadius: 8,
         marginBottom: 10
-      },
-      optionText: {
+    },
+    optionText: {
         fontSize: 16,
         color: '#2c3e50'
-      },
-      resultContainer: {
+    },
+    resultContainer: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center'
-      },
-      resultTitle: {
+    },
+    resultTitle: {
         fontSize: 24,
         fontWeight: 'bold',
         color: '#2c3e50',
         marginBottom: 20
-      },
-      scoreText: {
+    },
+    scoreText: {
         fontSize: 20,
         color: '#2c3e50',
         marginBottom: 30
-      },
-      restartButton: {
+    },
+    restartButton: {
         backgroundColor: '#3498db',
         padding: 15,
         borderRadius: 8,
         width: '80%'
-      },
-      buttonText: {
+    },
+    buttonText: {
         color: 'white',
         textAlign: 'center',
         fontWeight: 'bold'
-      }
-    });
-    
-    export default TestScreen;
+    }
+});
+
+export default TestScreen;
