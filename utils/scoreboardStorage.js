@@ -1,4 +1,5 @@
 import { db } from './firebase';
+import questions from '../data/questions.json';
 import {
   collection,
   doc,
@@ -14,9 +15,6 @@ import {
 
 const SCOREBOARD_DOC = 'scoreboard/stats';
 
-//  Get the scoreboard stats
-//  (attempts, wins, losses)
-//  If the document doesn't exist, return default values
 export const getScoreboard = async () => {
   try {
     const docRef = doc(db, SCOREBOARD_DOC);
@@ -28,8 +26,6 @@ export const getScoreboard = async () => {
   }
 };
 
-//  Update the scoreboard stats
-//  Increment attempts, wins, or losses based on the game result
 export const updateScoreboard = async (isWin) => {
   try {
     const data = await getScoreboard();
@@ -44,8 +40,6 @@ export const updateScoreboard = async (isWin) => {
   }
 };
 
-//  Reset the scoreboard stats
-//  Set attempts, wins, and losses to 0
 export const resetScoreboard = async () => {
   try {
     await setDoc(doc(db, SCOREBOARD_DOC), {
@@ -58,7 +52,6 @@ export const resetScoreboard = async () => {
   }
 };
 
-// Record test results
 export const recordTestResult = async ({ score, total, correctQuestions, wrongQuestions }) => {
   try {
     await addDoc(collection(db, 'tests'), {
@@ -75,7 +68,6 @@ export const recordTestResult = async ({ score, total, correctQuestions, wrongQu
   }
 };
 
-// Get test history
 export const getTestHistory = async () => {
   try {
     const q = query(collection(db, 'tests'), orderBy('timestamp', 'desc'));
@@ -97,14 +89,12 @@ export const clearTestHistory = async () => {
   }
 };
 
-// Save failed questions (merged without duplicates)
 export const saveFailedQuestions = async (newFails) => {
   try {
     const docRef = doc(db, 'failed', 'latest');
     const snapshot = await getDoc(docRef);
     let currentFails = snapshot.exists() ? snapshot.data().questions || [] : [];
 
-    // Merge unique
     const merged = [...currentFails];
     newFails.forEach(q => {
       if (!merged.some(existing => existing.id === q.id)) {
@@ -113,13 +103,11 @@ export const saveFailedQuestions = async (newFails) => {
     });
 
     await setDoc(docRef, { questions: merged });
-    console.log('❌ Failed questions merged and saved.');
   } catch (error) {
     console.error('Error saving failed questions:', error);
   }
 };
 
-// Get failed questions
 export const getFailedQuestions = async () => {
   try {
     const docRef = doc(db, 'failed', 'latest');
@@ -131,22 +119,57 @@ export const getFailedQuestions = async () => {
   }
 };
 
-// Save completed retry questions
 export const saveCompletedQuestions = async (questions) => {
   try {
     await setDoc(doc(db, 'completed', 'latest'), { questions });
-    console.log('Completed questions saved to Firestore');
   } catch (error) {
     console.error('Error saving completed questions:', error);
   }
 };
 
-// Update remaining failed questions
 export const updateFailedQuestionsAfterRetry = async (remainingFailed) => {
   try {
     await setDoc(doc(db, 'failed', 'latest'), { questions: remainingFailed });
-    console.log('🔄 Updated failed questions after retry');
   } catch (error) {
     console.error('Error updating failed questions after retry:', error);
+  }
+};
+
+export const saveNotCompletedQuestions = async (questions) => {
+  try {
+    await setDoc(doc(db, 'notCompleted', 'latest'), { questions });
+  } catch (error) {
+    console.error('Error saving not completed questions:', error);
+  }
+};
+
+export const getNotCompletedQuestions = async () => {
+  try {
+    const docRef = doc(db, 'notCompleted', 'latest');
+    const snapshot = await getDoc(docRef);
+    return snapshot.exists() ? snapshot.data().questions || [] : [];
+  } catch (error) {
+    console.error('Error loading not completed questions:', error);
+    return [];
+  }
+};
+
+export const updateNotCompletedAfterAttempt = async (attemptedQuestions) => {
+  try {
+    const all = await getNotCompletedQuestions();
+    const updated = all.filter(q => !attemptedQuestions.some(a => a.id === q.id));
+    await setDoc(doc(db, 'notCompleted', 'latest'), { questions: updated });
+  } catch (error) {
+    console.error('Error updating not completed questions:', error);
+  }
+};
+
+// ✅ Reset all questions to not completed
+export const resetNotCompletedQuestions = async () => {
+  try {
+    await setDoc(doc(db, 'notCompleted', 'latest'), { questions });
+    console.log('🔄 Reset all questions to not completed');
+  } catch (error) {
+    console.error('Error resetting notCompleted questions:', error);
   }
 };
