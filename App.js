@@ -9,13 +9,13 @@ import TestHistoryScreen from './screens/TestHistoryScreen';
 import RetryFailedScreen from './screens/RetryFailedScreen';
 import TryNewQuestionsScreen from './screens/TryNewQuestionsScreen';
 
-import { seedNotCompleted } from './utils/seedNotCompleted'; // ✅ import
+import { seedNotCompleted } from './utils/seedNotCompleted';
 
 const Stack = createStackNavigator();
 
 const App = () => {
   useEffect(() => {
-    seedNotCompleted(); // ✅ run once at startup
+    seedNotCompleted();
   }, []);
 
   return (
